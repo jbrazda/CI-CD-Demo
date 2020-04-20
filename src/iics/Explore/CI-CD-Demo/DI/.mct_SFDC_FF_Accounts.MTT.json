@@ -1,0 +1,142 @@
+[
+   {
+      "objectGuid": "4r165WlKEhUcTSr2QjM1c9",
+      "objectName": "mct_SFDC_FF_Accounts",
+      "objectType": "MTT",
+      "path": "/Explore/CI-CD-Demo/DI",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": "This is a Demo mapping  task updated on 2020/07/10",
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [
+            "lkr3sq156GjhVE1iAg80cq",
+            "heeW1km6OSsdU3oCZmJkkf",
+            "fFnper0EEKYijXXSKDAymc",
+            "7pq8pf4TDuOgA1zeuguCmU"
+         ],
+         "repoInfo": {
+            "repoHandle": "0118TN0Z000000000005"
+         }
+      }
+   },
+   {
+      "objectGuid": "lkr3sq156GjhVE1iAg80cq",
+      "objectName": "m_SFDC_FF_Accounts",
+      "objectType": "DTEMPLATE",
+      "path": "/Explore/CI-CD-Demo/DI",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": "Demo Mapping Updated on 2020-07-01",
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN17000000000005"
+         }
+      }
+   },
+   {
+      "objectGuid": "heeW1km6OSsdU3oCZmJkkf",
+      "objectName": "NA",
+      "objectType": "AgentGroup",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN25000000000002"
+         }
+      }
+   },
+   {
+      "objectGuid": "fFnper0EEKYijXXSKDAymc",
+      "objectName": "FF_NA_Staging_Salesforce",
+      "objectType": "Connection",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": "Staging Data For Salesforce Demos",
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN0B000000000004"
+         }
+      }
+   },
+   {
+      "objectGuid": "7pq8pf4TDuOgA1zeuguCmU",
+      "objectName": "Salesforce",
+      "objectType": "Connection",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN0B000000000003"
+         }
+      }
+   }
+]

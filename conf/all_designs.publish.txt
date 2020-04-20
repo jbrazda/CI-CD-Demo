@@ -1,0 +1,4 @@
+Explore/CI-CD-Demo/Connectors/GoogleGeocodeAPI.AI_SERVICE_CONNECTOR
+Explore/CI-CD-Demo/Connections/GoogleGeocodeAPI.AI_CONNECTION
+Explore/CI-CD-Demo/Processes/GoogleDemo.PROCESS
+Explore/CI-CD-Demo/Guides/Google Address Lookup.GUIDE

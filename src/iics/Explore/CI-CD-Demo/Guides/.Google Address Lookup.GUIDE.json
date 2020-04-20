@@ -1,0 +1,48 @@
+[
+   {
+      "objectGuid": "9vPUv4GFtidhPiOZElmAsK",
+      "objectName": "Google Address Lookup",
+      "objectType": "GUIDE",
+      "path": "/Explore/CI-CD-Demo/Guides",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "application/json; charset=utf-8",
+            "description": "This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE",
+            "documentState": "VALID"
+         },
+         "contextAttributes": null,
+         "modelVersion": {
+            "major": 1,
+            "minor": 0
+         },
+         "objectRefs": [
+            "kW6QmDseEwujNYt36konGu"
+         ],
+         "repoInfo": {
+            "repoHandle": "fRpB7O2htghGZ5i-gt-3296069-2020-04-20T23:27:12.084Z::gt.xml"
+         }
+      }
+   },
+   {
+      "objectGuid": "kW6QmDseEwujNYt36konGu",
+      "objectName": "GoogleGeocodeAPI",
+      "objectType": "AI_CONNECTION",
+      "path": "/Explore/CI-CD-Demo/Connections",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "application/json; charset=utf-8",
+            "description": "",
+            "documentState": "VALID"
+         },
+         "contextAttributes": null,
+         "modelVersion": {
+            "major": 1,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "oBmeK3jhBjop81V-gt-1413691-2020-04-20T23:25:34.233Z::conn.xml"
+         }
+      }
+   }
+]

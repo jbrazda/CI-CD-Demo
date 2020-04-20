@@ -1,0 +1,58 @@
+[
+   {
+      "objectGuid": "7pq8pf4TDuOgA1zeuguCmU",
+      "objectName": "Salesforce",
+      "objectType": "Connection",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [
+            "heeW1km6OSsdU3oCZmJkkf"
+         ],
+         "repoInfo": {
+            "repoHandle": "0118TN0B000000000003"
+         }
+      }
+   },
+   {
+      "objectGuid": "heeW1km6OSsdU3oCZmJkkf",
+      "objectName": "NA",
+      "objectType": "AgentGroup",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN25000000000002"
+         }
+      }
+   }
+]

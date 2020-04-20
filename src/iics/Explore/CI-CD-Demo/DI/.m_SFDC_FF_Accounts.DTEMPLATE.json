@@ -1,0 +1,86 @@
+[
+   {
+      "objectGuid": "lkr3sq156GjhVE1iAg80cq",
+      "objectName": "m_SFDC_FF_Accounts",
+      "objectType": "DTEMPLATE",
+      "path": "/Explore/CI-CD-Demo/DI",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": "Demo Mapping Updated on 2020-07-01",
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [
+            "fFnper0EEKYijXXSKDAymc",
+            "7pq8pf4TDuOgA1zeuguCmU"
+         ],
+         "repoInfo": {
+            "repoHandle": "0118TN17000000000005"
+         }
+      }
+   },
+   {
+      "objectGuid": "fFnper0EEKYijXXSKDAymc",
+      "objectName": "FF_NA_Staging_Salesforce",
+      "objectType": "Connection",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": "Staging Data For Salesforce Demos",
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN0B000000000004"
+         }
+      }
+   },
+   {
+      "objectGuid": "7pq8pf4TDuOgA1zeuguCmU",
+      "objectName": "Salesforce",
+      "objectType": "Connection",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN0B000000000003"
+         }
+      }
+   }
+]

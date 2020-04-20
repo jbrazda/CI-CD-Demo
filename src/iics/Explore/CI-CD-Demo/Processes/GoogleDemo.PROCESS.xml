@@ -1,0 +1,87 @@
+<aetgt:getResponse xmlns:aetgt="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd"
+                   xmlns:types1="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd">
+   <types1:Item>
+      <types1:EntryId>PUEbfV3HRvsGRvD-gt-3645682-2020-04-21T14:49:19.676Z::pd.xml</types1:EntryId>
+      <types1:Name>GoogleDemo</types1:Name>
+      <types1:MimeType>application/xml+process</types1:MimeType>
+      <types1:Description>This is a Google Geocode API demo Process</types1:Description>
+      <types1:AppliesTo/>
+      <types1:Tags/>
+      <types1:VersionLabel>1.0</types1:VersionLabel>
+      <types1:State>CURRENT</types1:State>
+      <types1:ProcessGroup/>
+      <types1:CreatedBy>jbrazda@unicosolution.com.dev</types1:CreatedBy>
+      <types1:CreationDate>2020-04-21T14:49:20Z</types1:CreationDate>
+      <types1:ModifiedBy>jbrazda@unicosolution.com.dev</types1:ModifiedBy>
+      <types1:ModificationDate>2021-04-30T13:25:31Z</types1:ModificationDate>
+      <types1:PublicationStatus>published</types1:PublicationStatus>
+      <types1:PublishedBy>jbrazda@unicosolution.com.dev</types1:PublishedBy>
+      <types1:PublicationDate>2021-04-30T13:26:04Z</types1:PublicationDate>
+      <types1:PublishedContributionId>project:/spi.GoogleDemo/GoogleDemo.pd.xml</types1:PublishedContributionId>
+      <types1:AutosaveExists>false</types1:AutosaveExists>
+      <types1:Entry>
+         <process xmlns="http://schemas.active-endpoints.com/appmodules/screenflow/2010/10/avosScreenflow.xsd"
+                  xmlns:list="urn:activevos:spi:list:functions"
+                  displayName="GoogleDemo"
+                  name="GoogleDemo"
+                  overrideAPIName="false">
+            <appliesTo/>
+            <description>This is a Google Geocode API demo Process</description>
+            <tags/>
+            <generator>Informatica Process Designer 11</generator>
+            <input>
+               <parameter description="" name="in_address" type="string">
+                  <options>
+                     <option name="required">false</option>
+                  </options>
+               </parameter>
+            </input>
+            <output>
+               <field description="" name="geocodeResponse" type="reference">
+                  <options>
+                     <option name="referenceTo">GoogleGeocodeAPI:geocodeResponse</option>
+                     <option name="required">false</option>
+                     <option name="isCopy">true</option>
+                     <option name="guid">kW6QmDseEwujNYt36konGu</option>
+                  </options>
+               </field>
+            </output>
+            <notes/>
+            <deployment suspendOnFault="false" tracingLevel="verbose">
+               <rest/>
+            </deployment>
+            <flow id="a">
+               <start id="b">
+                  <link id="k9a0w0tp" targetId="k9a0w0to"/>
+               </start>
+               <service id="k9a0w0to">
+                  <title>geocodeAddress</title>
+                  <serviceName>GoogleGeocodeAPI:geocodeAddress</serviceName>
+                  <serviceGUID>kW6QmDseEwujNYt36konGu</serviceGUID>
+                  <serviceInput>
+                     <parameter name="address" source="field" updatable="true">input.in_address</parameter>
+                  </serviceInput>
+                  <link id="k9a0w0tq" targetId="c"/>
+               </service>
+               <end id="c"/>
+            </flow>
+         </process>
+         <ns1:sample-data-sets xmlns:ns1="http://schemas.active-endpoints.com/appmodules/repository/2010/10/sampleData.xsd">
+            <ns1:SampleData>
+               <ns1:Id>b4f59708-22e2-4d65-877c-f6f72c78a6e6</ns1:Id>
+               <ns1:Name>Test Payload</ns1:Name>
+               <ns1:CreatedBy>jbrazda@unicosolution.com.dev</ns1:CreatedBy>
+               <ns1:CreationDate>2020-04-21T14:50:36Z</ns1:CreationDate>
+               <ns1:ModifiedBy>jbrazda@unicosolution.com.dev</ns1:ModifiedBy>
+               <ns1:ModifiedDate>2021-04-30T13:25:32Z</ns1:ModifiedDate>
+               <ns1:Data format="json">{
+	 "in_address": "Billerica, MA"
+}</ns1:Data>
+            </ns1:SampleData>
+         </ns1:sample-data-sets>
+      </types1:Entry>
+      <types1:GUID>9smYMVbZfgmiwRVUTJwT8L</types1:GUID>
+      <types1:DisplayName>GoogleDemo</types1:DisplayName>
+   </types1:Item>
+   <types1:CurrentServerDateTime>2021-05-18T12:55:04.185Z</types1:CurrentServerDateTime>
+</aetgt:getResponse>

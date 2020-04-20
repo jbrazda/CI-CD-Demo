@@ -1,0 +1,217 @@
+<aetgt:getResponse xmlns:aetgt="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd"
+                   xmlns:types1="http://schemas.active-endpoints.com/appmodules/repository/2010/10/avrepository.xsd">
+   <types1:Item>
+      <types1:EntryId>fRpB7O2htghGZ5i-gt-3296069-2020-04-20T23:27:12.084Z::gt.xml</types1:EntryId>
+      <types1:Name>Google_Address_Lookup</types1:Name>
+      <types1:MimeType>application/xml+screenflow</types1:MimeType>
+      <types1:Description>This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE</types1:Description>
+      <types1:AppliesTo/>
+      <types1:Tags/>
+      <types1:VersionLabel>1.0</types1:VersionLabel>
+      <types1:State>CURRENT</types1:State>
+      <types1:ProcessGroup/>
+      <types1:CreatedBy>jbrazda@unicosolution.com.dev</types1:CreatedBy>
+      <types1:CreationDate>2020-04-20T23:27:12Z</types1:CreationDate>
+      <types1:ModifiedBy>jbrazda@unicosolution.com.dev</types1:ModifiedBy>
+      <types1:ModificationDate>2021-04-30T13:25:32Z</types1:ModificationDate>
+      <types1:PublicationStatus>published</types1:PublicationStatus>
+      <types1:PublishedBy>jbrazda@unicosolution.com.dev</types1:PublishedBy>
+      <types1:PublicationDate>2021-04-30T13:26:15Z</types1:PublicationDate>
+      <types1:PublishedContributionId>project:/sf.Google_Address_Lookup/Google_Address_Lookup.xml</types1:PublishedContributionId>
+      <types1:AutosaveExists>false</types1:AutosaveExists>
+      <types1:Entry>
+         <avosScreenflow xmlns="http://schemas.active-endpoints.com/appmodules/screenflow/2010/10/avosScreenflow.xsd"
+                         xmlns:list="urn:activevos:spi:list:functions"
+                         allowRestart="true"
+                         displayName="Google Address Lookup"
+                         doneOnEndStep="false"
+                         name="Google_Address_Lookup"
+                         runAsUser="$current">
+            <description>This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE</description>
+            <appliesTo/>
+            <tags/>
+            <generator>Informatica Process Designer 11</generator>
+            <tempFields>
+               <field description="" name="tmp_google_maps_url" type="url">
+                  <options>
+                     <option name="urlDisplayReadonlyAs">Link</option>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+            </tempFields>
+            <runOn target="desktop"/>
+            <notes/>
+            <deployment/>
+            <sendFeedback>
+               <emailTo/>
+            </sendFeedback>
+            <flow>
+               <startScreen id="jd300kk3">
+                  <title>Start</title>
+                  <body contentType="text/html"/>
+                  <actions>
+                     <action alt="null" id="jd300kk3_k993yzdb" targetScreen="k993yzdb">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+                  <screenData skipIfRequiredFilled="true"/>
+               </startScreen>
+               <screen id="k993yzdk">
+                  <title>Google Maps Data for Address</title>
+                  <body contentType="text/html">&lt;p&gt;Address Data&lt;/p&gt;
+&lt;table cellpadding="5"&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Latitude&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" name="output.lat" readonly="readonly" type="text" value="lat (output)"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Longitude&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" name="output.lng" readonly="readonly" type="text" value="lng (output)"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Formatted Address&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" title="geocodeResponse&gt;results&gt;formatted_address" name="output.geocodeResponse[1]/results[1]/formatted_address" readonly="readonly" type="text" value="geocodeResponse&gt;results&gt;formatted_address"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Place ID&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" title="geocodeResponse&gt;results&gt;place_id" name="output.geocodeResponse[1]/results[1]/place_id" readonly="readonly" type="text" value="geocodeResponse&gt;results&gt;place_id"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Types&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" title="geocodeResponse&gt;results&gt;types" name="output.geocodeResponse[1]/results[1]/types" readonly="readonly" type="text" value="geocodeResponse&gt;results&gt;types"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Location Type&lt;/td&gt;
+&lt;td&gt;&lt;input style="-moz-appearance: none; background-color: lightgrey; border: none;" title="geocodeResponse&gt;results&gt;geometry&gt;location_type" name="output.geocodeResponse[1]/results[1]/geometry[1]/location_type" readonly="readonly" type="text" value="geocodeResponse&gt;results&gt;geometry&gt;location_type"&gt;&amp;nbsp;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&amp;nbsp; &lt;input class="" style="-moz-appearance: none; background-color: lightgrey; border: none;" title="tmp_google_maps_url (temporary)" name="temp.tmp_google_maps_url" readonly="readonly" type="text" value="tmp_google_maps_url (temporary)"&gt;&amp;nbsp;&lt;/p&gt;</body>
+                  <actionPrompt/>
+                  <actions>
+                     <action alt="null" id="k993yzdk_jd4cwa59" targetScreen="jd4cwa59">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+                  <screenData skipIfRequiredFilled="false">
+                     <screenDataItem name="output.lat"
+                                     readonly="true"
+                                     required="false"
+                                     type="string"/>
+                     <screenDataItem name="output.lng"
+                                     readonly="true"
+                                     required="false"
+                                     type="string"/>
+                     <screenDataItem name="output.geocodeResponse[1]/results[1]/formatted_address"
+                                     readonly="true"
+                                     required="false"
+                                     type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </screenDataItem>
+                     <screenDataItem name="output.geocodeResponse[1]/results[1]/place_id"
+                                     readonly="true"
+                                     required="false"
+                                     type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </screenDataItem>
+                     <screenDataItem name="output.geocodeResponse[1]/results[1]/types"
+                                     readonly="true"
+                                     required="false"
+                                     type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </screenDataItem>
+                     <screenDataItem name="output.geocodeResponse[1]/results[1]/geometry[1]/location_type"
+                                     readonly="true"
+                                     required="false"
+                                     type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </screenDataItem>
+                     <screenDataItem name="temp.tmp_google_maps_url"
+                                     readonly="true"
+                                     required="false"
+                                     type="url">
+                        <options>
+                           <option name="required">false</option>
+                           <option name="urlDisplayReadonlyAs">Link</option>
+                           <option name="urlDisplayReadOnlyLabel">View Map</option>
+                        </options>
+                     </screenDataItem>
+                  </screenData>
+               </screen>
+               <service id="k993yzdb">
+                  <title>geocodeAddress</title>
+                  <serviceName>GoogleGeocodeAPI:geocodeAddress</serviceName>
+                  <serviceGUID>kW6QmDseEwujNYt36konGu</serviceGUID>
+                  <serviceInput>
+                     <parameter id="k993skoc" name="address" source="screen" updatable="false">screen.address</parameter>
+                  </serviceInput>
+                  <screen id="k993yzdb-servicescreen">
+                     <title>geocodeAddress</title>
+                     <body contentType="text/html">&lt;p&gt;Please Enter Address&lt;/p&gt;
+&lt;p&gt;&lt;span id="ae-sf-viewer-screen-body-address-field-label"&gt;address&lt;/span&gt; &lt;input class="" title="Edit a field to change the field properties." name="screen.address" type="text" value="address*"&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</body>
+                     <actionPrompt/>
+                     <actions/>
+                     <screenData skipIfRequiredFilled="false">
+                        <screenDataItem name="screen.address"
+                                        readonly="false"
+                                        required="true"
+                                        type="string">
+                           <options>
+                              <option name="text_size">100</option>
+                              <option name="required">true</option>
+                              <option name="defaultvalue">100 High St., Boston</option>
+                           </options>
+                        </screenDataItem>
+                     </screenData>
+                  </screen>
+                  <actions>
+                     <action alt="null" id="k993yzdb_k993yzds" targetScreen="k993yzds">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+               </service>
+               <endScreen id="jd4cwa59">
+                  <title>End</title>
+                  <body contentType="text/html"/>
+                  <redirectTo type="current_object"/>
+                  <screenActionLabel>
+                     <text/>
+                  </screenActionLabel>
+               </endScreen>
+               <assignment id="k993yzds">
+                  <title>Set URL</title>
+                  <operation source="formula" to="temp.tmp_google_maps_url">
+                     <expression language="XQuery">let $api := 'api=1'
+let $address := concat('query=',encode-for-uri($output.geocodeResponse[1]/results[1]/formatted_address))
+let $query_place_id := concat('query_place_id =',$output.geocodeResponse[1]/results[1]/place_id )
+let $zoom 	:= 'zoom=16'
+(:basemap (optional): Defines the type of map to display. The value can be either roadmap (default), satellite, or terrain.:)
+let $basemap:= 'maptype=roadmap'
+let $params := ($api,$address,$query_place_id,$zoom,$basemap)
+return
+concat('https://www.google.com/maps/search/?',string-join($params, "&amp;amp;"))
+    </expression>
+                  </operation>
+                  <actions>
+                     <action alt="null" id="k993yzds_k993yzdk" targetScreen="k993yzdk">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+               </assignment>
+            </flow>
+         </avosScreenflow>
+      </types1:Entry>
+      <types1:GUID>9vPUv4GFtidhPiOZElmAsK</types1:GUID>
+      <types1:DisplayName>Google Address Lookup</types1:DisplayName>
+   </types1:Item>
+   <types1:CurrentServerDateTime>2021-05-18T12:55:04.211Z</types1:CurrentServerDateTime>
+</aetgt:getResponse>

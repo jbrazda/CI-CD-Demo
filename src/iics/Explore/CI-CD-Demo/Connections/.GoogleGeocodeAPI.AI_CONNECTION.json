@@ -1,0 +1,48 @@
+[
+   {
+      "objectGuid": "kW6QmDseEwujNYt36konGu",
+      "objectName": "GoogleGeocodeAPI",
+      "objectType": "AI_CONNECTION",
+      "path": "/Explore/CI-CD-Demo/Connections",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "application/json; charset=utf-8",
+            "description": "",
+            "documentState": "VALID"
+         },
+         "contextAttributes": null,
+         "modelVersion": {
+            "major": 1,
+            "minor": 0
+         },
+         "objectRefs": [
+            "aBPo67hA5gyjOeTZlxIKG6"
+         ],
+         "repoInfo": {
+            "repoHandle": "oBmeK3jhBjop81V-gt-1413691-2020-04-20T23:25:34.233Z::conn.xml"
+         }
+      }
+   },
+   {
+      "objectGuid": "aBPo67hA5gyjOeTZlxIKG6",
+      "objectName": "GoogleGeocodeAPI",
+      "objectType": "AI_SERVICE_CONNECTOR",
+      "path": "/Explore/CI-CD-Demo/Connectors",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "application/json; charset=utf-8",
+            "description": "Use Google's Simple Geocoding Web Service.  Takes an Address and returns a Lat, Lng and normalized address details.\n\nSee:\nhttps://developers.google.com/maps/documentation/geocoding/start",
+            "documentState": "VALID"
+         },
+         "contextAttributes": null,
+         "modelVersion": {
+            "major": 1,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "kZT1cnFKi9zhFty-gt-3293840-2020-04-20T23:21:40.168Z::svc.xml"
+         }
+      }
+   }
+]

@@ -1,0 +1,22 @@
+[
+   {
+      "objectGuid": "1bNYC3zFrnWgYoY5EwxPIJ",
+      "objectName": "CI-CD-Demo",
+      "objectType": "Project",
+      "path": "/Explore",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "Binary",
+            "description": "Project to Demonstrate CI CD Pipelines",
+            "documentState": "COMPLETE"
+         },
+         "contextAttributes": [],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": null
+      }
+   }
+]

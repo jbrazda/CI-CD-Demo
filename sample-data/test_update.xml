@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<row m:isArray="true"
+    xmlns:m="urn:informatica:ae:xquery:json2xml:meta-data">
+    <id m:type="xs:int">4115549135628164</id>
+    <cells>
+        <columnId>4777022688913284</columnId>
+        <value>2021-07-24</value>
+    </cells>
+    <cells>
+        <columnId>2525222875228036</columnId>
+        <value m:type="xs:int">200</value>
+    </cells>
+    <cells>
+        <columnId>7028822502598532</columnId>
+        <value>b</value>
+    </cells>
+    <cells>
+        <columnId>1399322968385412</columnId>
+        <value m:type="xs:boolean">true</value>
+    </cells>
+    <cells>
+        <columnId>5902922595755908</columnId>
+        <value>value1</value>
+    </cells>
+    <cells>
+        <columnId>4643590939928452</columnId>
+        <value>Red</value>
+    </cells>
+
+</row>
+</root>

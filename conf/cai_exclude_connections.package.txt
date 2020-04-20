@@ -1,0 +1,2 @@
+Explore/CI-CD-Demo/Processes.Folder
+Explore/CI-CD-Demo/Guides.Folder

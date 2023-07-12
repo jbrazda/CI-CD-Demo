@@ -1,5 +1,7 @@
 name: IICS CI Workflow
   # Following Project Secrets must be defined in the CI/CD Configuration
+  # IICS_DEV_ORG_USER: ""
+  # IICS_DEV_ORG_PWD: ""
   # IICS_TEST_ORG_USER: ""
   # IICS_TEST_ORG_PWD: ""
   # IICS_PROD_ORG_USER: ""
@@ -20,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
@@ -79,6 +81,6 @@ jobs:
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=test \
         -Diics.target.package.config=./conf/cai_exclude_connections.package.txt \
-        -Diics.target.publish.config=./conf/all_designs.publish.txt \
+        -Diics.target.publish.config=../../../conf/all_designs.publish.txt \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true

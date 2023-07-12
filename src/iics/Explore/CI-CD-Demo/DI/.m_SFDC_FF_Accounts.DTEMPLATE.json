@@ -31,7 +31,7 @@
    },
    {
       "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_NA_Staging_Salesforce",
+      "objectName": "FF_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {

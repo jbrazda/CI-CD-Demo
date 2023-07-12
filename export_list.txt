@@ -1,6 +1,0 @@
-Explore/CI-CD-Demo.Project
-Explore/CI-CD-Demo/Connections.Folder
-Explore/CI-CD-Demo/Connectors.Folder
-Explore/CI-CD-Demo/DI.Folder
-Explore/CI-CD-Demo/Guides.Folder
-Explore/CI-CD-Demo/Processes.Folder

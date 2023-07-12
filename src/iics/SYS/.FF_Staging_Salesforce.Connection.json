@@ -1,7 +1,7 @@
 [
    {
       "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_NA_Staging_Salesforce",
+      "objectName": "FF_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {
@@ -21,7 +21,7 @@
             "minor": 0
          },
          "objectRefs": [
-            "heeW1km6OSsdU3oCZmJkkf"
+            "8OoRwZrdncvfN5Q97mLbQt"
          ],
          "repoInfo": {
             "repoHandle": "0118TN0B000000000004"
@@ -29,8 +29,8 @@
       }
    },
    {
-      "objectGuid": "heeW1km6OSsdU3oCZmJkkf",
-      "objectName": "NA",
+      "objectGuid": "8OoRwZrdncvfN5Q97mLbQt",
+      "objectName": "G01",
       "objectType": "AgentGroup",
       "path": "/SYS",
       "metadata": {
@@ -51,7 +51,7 @@
          },
          "objectRefs": [],
          "repoInfo": {
-            "repoHandle": "0118TN25000000000002"
+            "repoHandle": "0118TN25000000000003"
          }
       }
    }

@@ -48,7 +48,7 @@ ant update.src \
 ### Update Sources With cleanup/removal
 
 ```shell
-rm -rf src/ipd
+rm -rf src/iics
 ant clean.release -Diics.release=./conf/iics.release.properties
 ant update.src \
 -Diics.release=./conf/iics.release.properties \

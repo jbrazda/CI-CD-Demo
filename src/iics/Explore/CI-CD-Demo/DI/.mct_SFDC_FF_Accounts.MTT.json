@@ -22,9 +22,9 @@
          },
          "objectRefs": [
             "lkr3sq156GjhVE1iAg80cq",
-            "heeW1km6OSsdU3oCZmJkkf",
             "fFnper0EEKYijXXSKDAymc",
-            "7pq8pf4TDuOgA1zeuguCmU"
+            "7pq8pf4TDuOgA1zeuguCmU",
+            "8OoRwZrdncvfN5Q97mLbQt"
          ],
          "repoInfo": {
             "repoHandle": "0118TN0Z000000000005"
@@ -59,35 +59,8 @@
       }
    },
    {
-      "objectGuid": "heeW1km6OSsdU3oCZmJkkf",
-      "objectName": "NA",
-      "objectType": "AgentGroup",
-      "path": "/SYS",
-      "metadata": {
-         "additionalInfo": {
-            "contentType": "JSON",
-            "description": null,
-            "documentState": "VALID"
-         },
-         "contextAttributes": [
-            {
-               "name": "id",
-               "value": "@1"
-            }
-         ],
-         "modelVersion": {
-            "major": 0,
-            "minor": 0
-         },
-         "objectRefs": [],
-         "repoInfo": {
-            "repoHandle": "0118TN25000000000002"
-         }
-      }
-   },
-   {
       "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_NA_Staging_Salesforce",
+      "objectName": "FF_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {
@@ -136,6 +109,33 @@
          "objectRefs": [],
          "repoInfo": {
             "repoHandle": "0118TN0B000000000003"
+         }
+      }
+   },
+   {
+      "objectGuid": "8OoRwZrdncvfN5Q97mLbQt",
+      "objectName": "G01",
+      "objectType": "AgentGroup",
+      "path": "/SYS",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "JSON",
+            "description": null,
+            "documentState": "VALID"
+         },
+         "contextAttributes": [
+            {
+               "name": "id",
+               "value": "@1"
+            }
+         ],
+         "modelVersion": {
+            "major": 0,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "0118TN25000000000003"
          }
       }
    }

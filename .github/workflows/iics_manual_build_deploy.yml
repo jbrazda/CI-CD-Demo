@@ -5,12 +5,12 @@ name: Manual Deployment
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 # Following Project Secrets must be defined in the CI/CD Configuration
-# IICS_DEV_ORG_USER: ""
-# IICS_DEV_ORG_PWD: ""
-# IICS_TEST_ORG_USER: ""
-# IICS_TEST_ORG_PWD: ""
-# IICS_PROD_ORG_USER: ""
-# IICS_PROD_ORG_PWD: ""
+# IICS_ORG_USER_DEV: ""
+# IICS_ORG_PWD_DEV: ""
+# IICS_ORG_USER_TEST: ""
+# IICS_ORG_PWD_TEST: ""
+# IICS_ORG_USER_PROD: ""
+# IICS_ORG_PWD_PROD: ""
 
 
 on:
@@ -31,24 +31,35 @@ on:
         default: './conf/all_designs.publish.txt'
         # Input has to be provided for the workflow to run
         required: true
-      deploy_to:
-        # Controls where to Deploy current revision build
-        description: 'Deploy To Environment (comma separated list) Allowed Values: dev,test,prod'
+      deploy_to_dev:
+        # Controls if to ddploy this build to Dev Environment
+        description: 'Deploy to Dev'
         # Default value if no value is explicitly provided
-        default: 'test,prod'
+        default: false
+        type: boolean
         # Input has to be provided for the workflow to run
-        required: true
+        required: false
+      deploy_to_test:
+        # Controls if to ddploy this build to Dev Environment
+        description: 'Deploy to Test'
+        # Default value if no value is explicitly provided
+        default: true
+        type: boolean
+        # Input has to be provided for the workflow to run
+        required: false
+      deploy_to_prod:
+        # Controls if to ddploy this build to Dev Environment
+        description: 'Deploy to Prod'
+        # Default value if no value is explicitly provided
+        default: true
+        type: boolean
+        # Input has to be provided for the workflow to run
+        required: false
       
 jobs:
-  deploy_dev:
+  build_all:
     runs-on: ubuntu-latest
-    environment: dev
-    env:
-      IICS_EXPORT_FILE: IICS_HCG_ClientName
-      IICS_TARGET_ENVIRONMENT: dev
-      IICS_USER_NAME: ${{ secrets.IICS_DEV_ORG_USER }}
-      IICS_USER_PWD: ${{ secrets.IICS_DEV_ORG_PWD }}
-    if: ${{ contains(github.event.inputs.deploy_to,'dev' ) }}
+    name: Build Deployment Packages
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -56,8 +67,53 @@ jobs:
       with:
         distribution: zulu
         java-version: 11
-      
-    - name: Export Assets From Target Org
+    - name: Package Dev # Package DEV Components
+      run: |
+        ant package.src \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=dev \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Package Test # Package DEV Components
+      run: |
+        ant package.src \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=test \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Package Prod # Package DEV Components
+      run: |
+        ant package.src \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=prod \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build_packages
+        path: target/iics
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+## DEPLOY Jobs
+  deploy_dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_DEV }}
+      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
+      IICS_TARGET_ENVIRONMENT: dev
+    if: github.event.inputs.deploy_to_dev == true    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v3
+      with:
+        distribution: zulu
+        java-version: 11
+    - name: Backup Assets From Target Org
       run: |
         ant download.src \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
@@ -66,42 +122,44 @@ jobs:
         -Diics.export.list.location=./conf/export_list.txt \
         -Diics.source.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true
-    - name: Package # Package current head for Archival
-      run: |
-        ant package.src \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=./conf/all_exclude_connections.package.txt \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: dev_packages
+        name: backups
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-    - name: Build Deploy
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build_packages
+        path: target/iics
+    - name: Import Assets
       run: |
-        ant build.deploy \
+        ant import \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }}  \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Publish Assets
+      run: |
+        ant publish \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
+        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
   deploy_test:
     runs-on: ubuntu-latest
     environment: test
     env:
-      IICS_EXPORT_FILE: IICS_HCG_ClientName
+      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_TEST }}
+      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
-      IICS_USER_NAME: ${{ secrets.IICS_TEST_ORG_USER }}
-      IICS_USER_PWD: ${{ secrets.IICS_TEST_ORG_PWD }}
-    if: ${{ contains(github.event.inputs.deploy_to,'test' ) }}
+    if: github.event.inputs.deploy_to_dev == true    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -109,8 +167,7 @@ jobs:
       with:
         distribution: zulu
         java-version: 11
-      
-    - name: Export/Backup Assets From Target Org
+    - name: Backup Assets From Target Org
       run: |
         ant download.src \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
@@ -119,42 +176,45 @@ jobs:
         -Diics.export.list.location=./conf/export_list.txt \
         -Diics.source.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true
-    - name: Package # Package current head for Archival
-      run: |
-        ant package.src \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=./conf/all_exclude_connections.package.txt \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: test_packages
+        name: backups
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-    - name: Build Deploy
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build_packages
+        path: target/iics
+    - name: Import Assets
       run: |
-        ant build.deploy \
+        ant import \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Publish Assets
+      run: |
+        ant publish \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
+
   deploy_prod:
     runs-on: ubuntu-latest
     environment: prod
     env:
-      IICS_EXPORT_FILE: IICS_HCG_ClientName
+      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_TEST }}
+      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: prod
-      IICS_USER_NAME: ${{ secrets.IICS_PROD_ORG_USER }}
-      IICS_USER_PWD: ${{ secrets.IICS_PROD_ORG_PWD }}
-    if: ${{ contains(github.event.inputs.deploy_to,'prod' ) }}
+    if: github.event.inputs.deploy_to_dev == true    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -162,8 +222,7 @@ jobs:
       with:
         distribution: zulu
         java-version: 11
-      
-    - name: Export Assets From Target Org
+    - name: Backup Assets From Target Org
       run: |
         ant download.src \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
@@ -172,30 +231,33 @@ jobs:
         -Diics.export.list.location=./conf/export_list.txt \
         -Diics.source.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true
-    - name: Package # Package current head for Archival
-      run: |
-        ant package.src \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=./conf/all_exclude_connections.package.txt \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: prod_packages
+        name: backups
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-    - name: Build Deploy
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build_packages
+        path: target/iics
+    - name: Import Assets
       run: |
-        ant build.deploy \
+        ant import \
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=true
+    - name: Publish Assets
+      run: |
+        ant publish \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true

@@ -27,7 +27,7 @@ jobs:
   #  Export IICS Assets from the environment
     runs-on: ubuntu-latest
     # only allow to snapshot into dev  or release branches
-    # if: ${{ github.head_ref == 'dev' || contains(github.ref,'releases') }}
+    if: ${{ github.ref_name == 'dev' || contains(github.ref,'releases') }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 8
@@ -60,8 +60,8 @@ jobs:
       run: ./update_publish_all_config.sh
     - name: Commit and Push Changes
       run: |
-        git config --global user.email "${{ github.actor }}"
-        git config --global user.name "${{ github.actor }}@localhost"
+        git config --global user.email "${{ github.actor }}_github_actions"
+        git config --global user.name "${{ github.actor }}_github_actions@github.com"
         git diff --stat
         git add .
         git commit -m "${{ github.event.inputs.commitMessage }}" 

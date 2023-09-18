@@ -1,0 +1,83 @@
+name: Deploy PROD Push
+  # Following Project Secrets must be defined in the CI/CD Configuration
+  # IICS_PROD_ORG_USER
+  # IICS_PROD_ORG_PWD
+  # AWS_ACCESS_KEY_ID 
+  # AWS_SECRET_ACCESS_KEY
+
+on:
+  # Trigger the workflow on push request,
+  # but only for the defined branch
+  # ignore changes to listed paths
+  push:
+    branches:
+      - push_prod
+    paths-ignore:
+      - '.vscode/**'
+      - '/doc/**'
+      - '/sample-data/**'
+      - '**.md'
+      - '.ant_targets'
+      - '.project'
+      - 'update_publish_all_config.sh'
+jobs:
+  buid_deploy:
+    runs-on: ubuntu-latest
+    environment: prod
+    env:
+      IICS_TARGET_ENVIRONMENT: prod
+      IICS_CONFIG_EXPORT: ./conf/export_list.txt 
+      IICS_CONFIG_BACKUP: ./conf/all_exclude_connections.package.txt
+      IICS_CONFIG_PACKAGE: ./conf/push_test_prod.package.txt
+      # Transfom ocnfig is optional, required when the IICS_PACKAGE_TRANSFORM_DISABLED = false
+      IICS_CONFIG_TRANSFORM: ../../../conf/t2_prod.transform.properties
+      IICS_PACKAGE_TRANSFORM_DISABLED: false
+      IICS_CONFIG_PUBLISH: ./conf/all_designs.publish.txt
+      IICS_USER_NAME: ${{ secrets.IICS_PROD_ORG_USER }}
+      IICS_USER_PWD: ${{ secrets.IICS_PROD_ORG_PWD }}
+    ## DO NOT EDIT STEPS BELOW UNLESS YOU WANT TO CHANGE THOSE, USE ENV VARIABLES ABOVE CONFIGURE THE BUILD
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: zulu
+        java-version: 11
+      
+    - name: Export Assets From Target Org
+      run: |
+        ant download.src \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.export.list.location=${{ env.IICS_CONFIG_EXPORT }} \
+        -Diics.source.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
+        -Dtools.reporting.disabled=true
+    - name: Package # Package current head for Archival
+      run: |
+        ant package.src \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
+        -Diics.target.package.config=${{ env.IICS_CONFIG_BACKUP }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=${{ env.IICS_PACKAGE_TRANSFORM_DISABLED }}
+    - name: Archive Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: prod_packages
+        path: target/iics
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+    - name: Build Deploy
+      run: |
+        ant import publish \
+        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
+        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
+        -Diics.release=./conf/iics.release.properties \
+        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
+        -Diics.target.package.config=${{ env.IICS_CONFIG_PACKAGE }} \
+        -Diics.target.publish.config=${{ env.IICS_CONFIG_PUBLISH }} \
+        -Diics.package.transform.config=${{ env.IICS_CONFIG_TRANSFORM }} \
+        -Dtools.reporting.disabled=true \
+        -Dtools.transform.disabled=${{ env.IICS_PACKAGE_TRANSFORM_DISABLED }}

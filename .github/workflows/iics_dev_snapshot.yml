@@ -50,7 +50,7 @@ jobs:
         # update.src- task does export, expand and unzip nested archives to update src/iics design data
       run: |
         ant clean.src update.src \
-        -Diics.user.${{ env.IICS_SOURCE_ENVIRONMENT }}="${{ secrets.IICS_DEV_ORG_USER }}" \
+        -Diics.user.${{ env.IICS_SOURCE_ENVIRONMENT }}="${{ vars.IICS_DEV_ORG_USER }}" \
         -Diics.password.${{ env.IICS_SOURCE_ENVIRONMENT }}="${{ secrets.IICS_DEV_ORG_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.export.list.location=./conf/export_list.txt \

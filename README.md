@@ -2,14 +2,14 @@
 <!-- TOC -->
 
 - [CI-CD-Demo](#ci-cd-demo)
-  - [Overview](#overview)
-  - [Contacts](#contacts)
-  - [Run Scripts Manually](#run-scripts-manually)
-    - [Update Sources](#update-sources)
-    - [Update Sources With cleanup/removal](#update-sources-with-cleanupremoval)
-  - [Package Only and Inspect output (to QA)](#package-only-and-inspect-output-to-qa)
-    - [Build And Deploy to QA](#build-and-deploy-to-qa)
-  - [Links](#links)
+    - [Overview](#overview)
+    - [Contacts](#contacts)
+    - [Run Scripts Manually](#run-scripts-manually)
+        - [Update Sources](#update-sources)
+        - [Update Sources With cleanup/removal](#update-sources-with-cleanupremoval)
+    - [Package Only and Inspect output (to QA)](#package-only-and-inspect-output-to-qa)
+        - [Build And Deploy to QA](#build-and-deploy-to-qa)
+    - [Links](#links)
 
 <!-- /TOC -->
 
@@ -21,18 +21,19 @@ This project contains IICS Assets Management Demo
 
 See CI/CD COnfiguration Examples for different platforms
 
-| Git Hosting | Pipeline Configuration                                                           |
-| ----------- | -------------------------------------------------------------------------------- |
-| Bitbucket   | [bitbucket-pipelines.yml](bitbucket-pipelines.yml)                               |
-| Github      | [.github/workflows/iics_demo_deploy.yml](.github/workflows/iics_demo_deploy.yml) |
-| GitLab      | [.gitlab-ci.yml](.gitlab-ci.yml)                                                 |
+| Git Hosting  | Pipeline Configuration                                                                           | Description                                                   |
+| ------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| Bitbucket    | [bitbucket-pipelines.yml](bitbucket-pipelines.yml)                                               | Example pipeline for Bitbucket                                |
+| Github       | [.github/workflows/iics_dev_snapshot.yml](.github/workflows/iics_dev_snapshot.yml)               | Github Pipeline to tae IICS Snapshots to dev/feature branches |
+| Github       | [.github/workflows/iics_manual_build_deploy.yml](.github/workflows/iics_manual_build_deploy.yml) | Github Pipeline for Manual deployments                        |
+| GitLab       | [.gitlab-ci.yml](.gitlab-ci.yml)                                                                 | Example Gitlab Pipeline                                       |
+| Azure DevOps | [.ado](.ado)                                                                                     | Example Azure DevOps Pipelines                                |
 
 ## Contacts
 
-| Name            | Role             | Email                                     |
-| --------------- | ---------------- | ----------------------------------------- |
-| Jaroslav Brazda | Huron Consulting | [jbrazda@hcg.com](mailto:jbrazda@hcg.com) |
-|                 |                  |                                           |
+| Name | Role | Email |
+| ---- | ---- | ----- |
+|      |      |       |
 
 ## Run Scripts Manually
 

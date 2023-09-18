@@ -1,0 +1,73 @@
+# Manual  IICS Project Snapshot Pipeline
+trigger:
+- none
+name: Automated IICS Snapshot (DEV)
+
+variables:
+- group: "IICS-MDM-DEV"
+
+parameters:
+  - name: commitMessage
+    displayName: Commit Message
+    type: string
+    default: 'Automated IICS assets snapshot [skip_ci]'
+  - name: updateBuildConfigs
+    displayName: Update Build Configs
+    type: boolean
+    default: true
+
+
+pool:
+  name: 'default'
+  demands: 
+  - java
+  - Agent.Name -equals bld30-ADOA1
+#  vmImage: windows-latest
+
+jobs: 
+
+- job: Snapshot 
+  condition: contains(variables['Build.SourceBranch'], 'dev')
+  steps:
+  - checkout: self
+    persistCredentials: true
+
+  - script: |
+      echo "Build.SourceBranch:        $(Build.SourceBranch)"
+      echo "Build.RequestedFor:        $(Build.RequestedFor)"
+      echo "Build.RequestedForEmail:   $(Build.RequestedForEmail)"
+      echo "Git Commit message:        ${{ parameters.commitMessage }}"
+      echo "IICS_USER:                 $(IICS_ORG_USER)"
+      echo '==========================================='
+      echo 'ENV Variables'
+      echo '==========================================='
+      set
+    displayName: 'Print Environment Info'
+
+  - task: Ant@1
+    displayName: 'IICS Assets Snapshot'
+    inputs:
+      options: >-
+        -Diics.user.dev=$(IICS_ORG_USER) 
+        -Diics.password.dev=$(IICS_ORG_PWD) 
+        -Diics.release=./conf/iics.release.properties 
+        -Diics.source.environment=dev 
+        -Diics.export.list.location=./conf/export_list.txt
+      targets: 'clean.target clean.src update.src'
+      buildFile: 'build.xml'
+      publishJUnitResults: false
+  - task: PowerShell@2
+    inputs:
+      filePath: 'update_build_configs.ps1'
+    displayName: 'Update Build Configurations'
+    condition: ${{ eq( parameters.updateBuildConfigs, true) }}
+
+  - script: |
+      git config --global user.email "$(Build.RequestedForEmail)"
+      git config --global user.name "$(Build.RequestedFor)"
+      git diff --stat
+      git add .
+      git commit -m "${{ parameters.commitMessage }}" 
+      git push --set-upstream origin HEAD:$(Build.SourceBranchName)
+      echo "Git branch $(Build.SourceBranch) updated."
+    displayName: 'Commit Updated Assets'

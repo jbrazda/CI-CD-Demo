@@ -1,0 +1,76 @@
+# Scheduled IICS Project Snapshot Pipeline (DEV)
+# Scheduled to backup snapshots periodically
+name: Automated IICS Snapshot (DEV)
+
+trigger:
+- none
+
+variables:
+- group: IICS-MDM-DEV
+- name: IICS_PWD
+  value: $[variables.IICS_ORG_PWD]
+- name: IICS_USER
+  value: $[variables.IICS_ORG_USER]
+
+
+schedules:
+- cron: "0 0 * * *"
+  displayName: Daily midnight Snapshot
+  branches:
+    include:
+    - features/snapshots_dev
+
+pool:
+  name: 'default'
+  demands: 
+  - java
+  - Agent.Name -equals bld30-ADOA1
+#  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+  persistCredentials: true
+
+- script: |
+    echo "Build.SourceBranch:        $(Build.SourceBranch)"
+    echo "Build.RequestedFor:        $(Build.RequestedFor)"
+    echo "Build.RequestedForEmail:   $(Build.RequestedForEmail)"
+    echo "Git Commit User:           $(GIT_COMMIT_USER)"
+    echo "Git Commit Email:          $(GIT_COMMIT_EMAIL)"
+    echo "Git Commit message:        $(GIT_COMMIT_MESSAGE-equals 
+    echo "IICS_USER:                 $(IICS_USER)"
+    echo "IICS_PWD:                  $(IICS_PWD)"
+    echo '==========================================='
+    echo 'ENV Variables'
+    echo '==========================================='
+    set
+  displayName: 'Print Environment Info'
+
+- task: Ant@1
+  displayName: 'IICS Assets Snapshot'
+  inputs:
+    options: >- 
+      -Diics.user.dev=$(IICS_USER) 
+      -Diics.password.dev=$(IICS_PWD) 
+      -Diics.release=./conf/iics.release.properties 
+      -Diics.source.environment=dev 
+      -Diics.export.list.location=./conf/export_list.txt
+    targets: 'clean.target clean.src update.src'
+    buildFile: 'build.xml'
+    publishJUnitResults: false
+
+- task: PowerShell@2
+  inputs:
+    filePath: 'update_build_configs.ps1'
+  displayName: 'Update Build Configurations'
+
+- script: |
+    git config --global user.email "$(GIT_COMMIT_USER)"
+    git config --global user.name "$(GIT_COMMIT_EMAIL)"
+    git diff --stat
+    git add .
+    git commit -m "$(GIT_COMMIT_MESSAGE)" 
+    git push --set-upstream origin HEAD:features/$(Build.SourceBranchName)
+    echo "Git branch $(Build.SourceBranch) updated."
+  displayName: 'Commit Updated Assets'
+

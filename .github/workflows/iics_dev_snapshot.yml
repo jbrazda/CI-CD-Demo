@@ -62,5 +62,5 @@ jobs:
       uses: actions-x/commit@v6
       with: # Push all changes back to current branch
         message: ${{ github.event.inputs.commitMessage }}
-        branch: ${{ github.head_ref }}
+        branch: HEAD:${{ github.head_ref }}
         files: .

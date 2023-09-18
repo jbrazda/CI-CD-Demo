@@ -59,8 +59,11 @@ jobs:
     - name: Update Publish All Configuration
       run: ./update_publish_all_config.sh
     - name: Commit and Push Changes
-      uses: actions-x/commit@v6
-      with: # Push all changes back to current branch
-        message: ${{ github.event.inputs.commitMessage }}
-        branch: ${{ github.head_ref_name }}
-        files: .
+      run: |
+        git config --global user.email "${{ github.actor }}"
+        git config --global user.name "${{ github.actor }}@localhost"
+        git diff --stat
+        git add .
+        git commit -m "${{ github.event.inputs.commitMessage }}" 
+        git push --set-upstream origin HEAD:${{ github.ref_name }}
+        echo "Git branch ${{ github.ref_name }} updated."

@@ -141,6 +141,7 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
@@ -195,6 +196,7 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
@@ -250,6 +252,7 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
+        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true

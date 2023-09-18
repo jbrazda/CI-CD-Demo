@@ -4,7 +4,8 @@ name: Deploy PROD Push
   # IICS_PROD_ORG_PWD
   # AWS_ACCESS_KEY_ID 
   # AWS_SECRET_ACCESS_KEY
-
+env: 
+  IICS_BACKUP_PACKAGE: 'CI-CD-Demo.zip'
 on:
   # Trigger the workflow on push request,
   # but only for the defined branch
@@ -26,7 +27,6 @@ jobs:
     name: Build Deployment Packages
     env:
       IICS_PACKAGE_CONFIG: './conf/all_exclude_connections.package.txt'
-      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
       IICS_TRANSFORM_CONFIG_DEV: '../../../conf/dev.transform.properties'
       IICS_TRANSFORM_CONFIG_TEST: '../../../conf/test.transform.properties'
       IICS_TRANSFORM_CONFIG_PROD: '../../../conf/prod.transform.properties'
@@ -43,7 +43,7 @@ jobs:
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=dev \
         -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
-        -Diics.package.transform.config=${{ emv.IICS_TRANSFORM_CONFIG_DEV }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_DEV }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Package Test # Package TEST Package
@@ -52,7 +52,7 @@ jobs:
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=test \
         -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
-        -Diics.package.transform.config=${{ emv.IICS_TRANSFORM_CONFIG_TEST }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_TEST }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Package Prod # Package PROD Package
@@ -61,7 +61,7 @@ jobs:
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=prod \
         -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
-        -Diics.package.transform.config=${{ emv.IICS_TRANSFORM_CONFIG_PROD }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_PROD }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Archive Artifacts
@@ -78,6 +78,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
       IICS_TARGET_ENVIRONMENT: dev
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -98,7 +99,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_dev
-        path: target/iics
+        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
@@ -121,7 +122,7 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
   deploy_test:
@@ -131,6 +132,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_TEST }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -151,7 +153,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_test
-        path: target/iics
+        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
@@ -174,7 +176,7 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
 
@@ -185,6 +187,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_PROD }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_PROD }}
       IICS_TARGET_ENVIRONMENT: prod
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -205,7 +208,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_prod
-        path: target/iics
+        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
@@ -228,6 +231,6 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true

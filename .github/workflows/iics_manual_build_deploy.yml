@@ -102,7 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     env:
-      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_DEV }}
+      IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
       IICS_TARGET_ENVIRONMENT: dev
     if: github.event.inputs.deploy_to_dev == true    
@@ -156,7 +156,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     env:
-      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_TEST }}
+      IICS_USER_NAME: ${{ vars.IICS_ORG_USER_TEST }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
     if: github.event.inputs.deploy_to_dev == true    
@@ -211,8 +211,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: prod
     env:
-      IICS_USER_NAME: ${{ secrets.IICS_ORG_USER_TEST }}
-      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
+      IICS_USER_NAME: ${{ vars.IICS_ORG_USER_PROD }}
+      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_PROD }}
       IICS_TARGET_ENVIRONMENT: prod
     if: github.event.inputs.deploy_to_dev == true    
     steps:

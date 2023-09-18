@@ -159,7 +159,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_TEST }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
-    if: github.event.inputs.deploy_to_dev == true    
+    if: github.event.inputs.deploy_to_test == true    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -214,7 +214,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_PROD }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_PROD }}
       IICS_TARGET_ENVIRONMENT: prod
-    if: github.event.inputs.deploy_to_dev == true    
+    if: github.event.inputs.deploy_to_prod == true    
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8

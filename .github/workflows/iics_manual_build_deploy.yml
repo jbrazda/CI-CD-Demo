@@ -105,7 +105,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
       IICS_TARGET_ENVIRONMENT: dev
-    if: github.event.inputs.deploy_to_dev == true    
+    if: ${{ github.event.inputs.deploy_to_dev }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -125,7 +125,7 @@ jobs:
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: backups
+        name: backup_dev
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
@@ -159,7 +159,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_TEST }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
-    if: github.event.inputs.deploy_to_test == true    
+    if: ${{ github.event.inputs.deploy_to_test }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -179,7 +179,7 @@ jobs:
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: backups
+        name: backup_test
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
@@ -214,7 +214,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_PROD }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_PROD }}
       IICS_TARGET_ENVIRONMENT: prod
-    if: github.event.inputs.deploy_to_prod == true    
+    if: ${{ github.event.inputs.deploy_to_prod }} 
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -234,7 +234,7 @@ jobs:
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: backups
+        name: backup_prod
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts

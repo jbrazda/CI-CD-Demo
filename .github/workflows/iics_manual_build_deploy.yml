@@ -105,7 +105,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
       IICS_TARGET_ENVIRONMENT: dev
-    if: ${{ github.event.inputs.deploy_to_dev }}
+    if: ${{ github.event.inputs.deploy_to_dev == 'true' }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8

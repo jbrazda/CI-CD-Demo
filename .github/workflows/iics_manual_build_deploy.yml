@@ -1,8 +1,6 @@
 # This is a basic workflow that is manually triggered
 
 name: Manual Deployment
-env: 
-  IICS_BACKUP_PACKAGE: 'CI-CD-Demo.zip'
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -128,7 +126,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_dev
-        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
+        path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
@@ -183,7 +181,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_test
-        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
+        path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3
@@ -239,7 +237,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: backup_prod
-        path: target/iics/export/${{ env.IICS_TARGET_ENVIRONMENT }}/${{ env.IICS_BACKUP_PACKAGE }}
+        path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
     - name: Download Build Artifacts
       uses: actions/download-artifact@v3

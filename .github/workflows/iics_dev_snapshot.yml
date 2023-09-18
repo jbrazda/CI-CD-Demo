@@ -26,8 +26,8 @@ jobs:
   dev_commit_snapshot:
   #  Export IICS Assets from the environment
     runs-on: ubuntu-latest
-    # only allow to snapshot into dev  or release branches
-    if: ${{ github.ref_name == 'dev' || contains(github.ref,'releases') }}
+    # only allow to snapshot into dev  or features branches
+    if: ${{ github.ref_name == 'dev' || contains(github.ref,'features') }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 8

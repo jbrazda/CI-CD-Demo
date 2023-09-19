@@ -22,9 +22,9 @@
          },
          "objectRefs": [
             "lkr3sq156GjhVE1iAg80cq",
-            "fFnper0EEKYijXXSKDAymc",
+            "aRMMXJDPxa8kqugexC7EOP",
             "7pq8pf4TDuOgA1zeuguCmU",
-            "8OoRwZrdncvfN5Q97mLbQt"
+            "59e1n5ldY2cduXR6vFa2SM"
          ],
          "repoInfo": {
             "repoHandle": "0118TN0Z000000000005"
@@ -59,8 +59,8 @@
       }
    },
    {
-      "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_Staging_Salesforce",
+      "objectGuid": "aRMMXJDPxa8kqugexC7EOP",
+      "objectName": "FF_NA_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {
@@ -81,7 +81,7 @@
          },
          "objectRefs": [],
          "repoInfo": {
-            "repoHandle": "0118TN0B000000000004"
+            "repoHandle": "0118TN0B00000000001D"
          }
       }
    },
@@ -113,8 +113,8 @@
       }
    },
    {
-      "objectGuid": "8OoRwZrdncvfN5Q97mLbQt",
-      "objectName": "G01",
+      "objectGuid": "59e1n5ldY2cduXR6vFa2SM",
+      "objectName": "NA",
       "objectType": "AgentGroup",
       "path": "/SYS",
       "metadata": {
@@ -135,7 +135,7 @@
          },
          "objectRefs": [],
          "repoInfo": {
-            "repoHandle": "0118TN25000000000003"
+            "repoHandle": "0118TN2500000000000K"
          }
       }
    }

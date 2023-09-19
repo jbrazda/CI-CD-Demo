@@ -1,7 +1,7 @@
 [
    {
-      "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_Staging_Salesforce",
+      "objectGuid": "aRMMXJDPxa8kqugexC7EOP",
+      "objectName": "FF_NA_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {
@@ -24,7 +24,7 @@
             "8OoRwZrdncvfN5Q97mLbQt"
          ],
          "repoInfo": {
-            "repoHandle": "0118TN0B000000000004"
+            "repoHandle": "0118TN0B00000000001D"
          }
       }
    },

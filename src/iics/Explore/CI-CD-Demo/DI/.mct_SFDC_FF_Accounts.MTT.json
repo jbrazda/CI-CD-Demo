@@ -7,7 +7,7 @@
       "metadata": {
          "additionalInfo": {
             "contentType": "JSON",
-            "description": "This is a Demo mapping  task updated on 2020/07/10",
+            "description": "This is a Demo Mapping Task\r\nversion 2.0",
             "documentState": "VALID"
          },
          "contextAttributes": [
@@ -22,7 +22,7 @@
          },
          "objectRefs": [
             "lkr3sq156GjhVE1iAg80cq",
-            "fFnper0EEKYijXXSKDAymc",
+            "aRMMXJDPxa8kqugexC7EOP",
             "7pq8pf4TDuOgA1zeuguCmU",
             "8OoRwZrdncvfN5Q97mLbQt"
          ],
@@ -39,7 +39,7 @@
       "metadata": {
          "additionalInfo": {
             "contentType": "JSON",
-            "description": "Demo Mapping Updated on 2020-07-01",
+            "description": "Demo Mapping \nversion: 2.0",
             "documentState": "VALID"
          },
          "contextAttributes": [
@@ -59,8 +59,8 @@
       }
    },
    {
-      "objectGuid": "fFnper0EEKYijXXSKDAymc",
-      "objectName": "FF_Staging_Salesforce",
+      "objectGuid": "aRMMXJDPxa8kqugexC7EOP",
+      "objectName": "FF_NA_Staging_Salesforce",
       "objectType": "Connection",
       "path": "/SYS",
       "metadata": {
@@ -81,7 +81,7 @@
          },
          "objectRefs": [],
          "repoInfo": {
-            "repoHandle": "0118TN0B000000000004"
+            "repoHandle": "0118TN0B00000000001D"
          }
       }
    },

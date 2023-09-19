@@ -7,7 +7,7 @@
       "metadata": {
          "additionalInfo": {
             "contentType": "application/json; charset=utf-8",
-            "description": "This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE",
+            "description": "This Guide Demonstrates use of Google  Geocode API\nversion: 2.0",
             "documentState": "VALID"
          },
          "contextAttributes": null,
@@ -16,7 +16,8 @@
             "minor": 0
          },
          "objectRefs": [
-            "kW6QmDseEwujNYt36konGu"
+            "kW6QmDseEwujNYt36konGu",
+            "9smYMVbZfgmiwRVUTJwT8L"
          ],
          "repoInfo": {
             "repoHandle": "fRpB7O2htghGZ5i-gt-3296069-2020-04-20T23:27:12.084Z::gt.xml"
@@ -31,7 +32,7 @@
       "metadata": {
          "additionalInfo": {
             "contentType": "application/json; charset=utf-8",
-            "description": "",
+            "description": "Google Geocode API Connection",
             "documentState": "VALID"
          },
          "contextAttributes": null,
@@ -42,6 +43,28 @@
          "objectRefs": [],
          "repoInfo": {
             "repoHandle": "oBmeK3jhBjop81V-gt-1413691-2020-04-20T23:25:34.233Z::conn.xml"
+         }
+      }
+   },
+   {
+      "objectGuid": "9smYMVbZfgmiwRVUTJwT8L",
+      "objectName": "GoogleDemo",
+      "objectType": "PROCESS",
+      "path": "/Explore/CI-CD-Demo/Processes",
+      "metadata": {
+         "additionalInfo": {
+            "contentType": "application/json; charset=utf-8",
+            "description": "This is a Google Geocode API demo Process\nversion 2.0",
+            "documentState": "VALID"
+         },
+         "contextAttributes": null,
+         "modelVersion": {
+            "major": 1,
+            "minor": 0
+         },
+         "objectRefs": [],
+         "repoInfo": {
+            "repoHandle": "PUEbfV3HRvsGRvD-gt-3645682-2020-04-21T14:49:19.676Z::pd.xml"
          }
       }
    }

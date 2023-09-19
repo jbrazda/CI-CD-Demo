@@ -4,7 +4,8 @@
       <types1:EntryId>fRpB7O2htghGZ5i-gt-3296069-2020-04-20T23:27:12.084Z::gt.xml</types1:EntryId>
       <types1:Name>Google_Address_Lookup</types1:Name>
       <types1:MimeType>application/xml+screenflow</types1:MimeType>
-      <types1:Description>This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE</types1:Description>
+      <types1:Description>This Guide Demonstrates use of Google  Geocode API
+version: 2.0</types1:Description>
       <types1:AppliesTo/>
       <types1:Tags/>
       <types1:VersionLabel>1.0</types1:VersionLabel>
@@ -13,10 +14,10 @@
       <types1:CreatedBy>jbrazda@unicosolution.com.dev</types1:CreatedBy>
       <types1:CreationDate>2020-04-20T23:27:12Z</types1:CreationDate>
       <types1:ModifiedBy>jbrazda@unicosolution.com.dev</types1:ModifiedBy>
-      <types1:ModificationDate>2021-10-07T20:05:49Z</types1:ModificationDate>
+      <types1:ModificationDate>2023-09-19T13:49:50Z</types1:ModificationDate>
       <types1:PublicationStatus>published</types1:PublicationStatus>
       <types1:PublishedBy>jbrazda@unicosolution.com.dev</types1:PublishedBy>
-      <types1:PublicationDate>2021-10-07T20:06:16Z</types1:PublicationDate>
+      <types1:PublicationDate>2023-09-19T13:50:15Z</types1:PublicationDate>
       <types1:PublishedContributionId>project:/sf.Google_Address_Lookup/Google_Address_Lookup.xml</types1:PublishedContributionId>
       <types1:AutosaveExists>false</types1:AutosaveExists>
       <types1:Entry>
@@ -27,7 +28,8 @@
                          doneOnEndStep="false"
                          name="Google_Address_Lookup"
                          runAsUser="$current">
-            <description>This Guide Demonstrates use of Google  Geocode API Updated on 2020-07-01 TEST UPDATE</description>
+            <description>This Guide Demonstrates use of Google  Geocode API
+version: 2.0</description>
             <appliesTo/>
             <tags/>
             <generator>Informatica Process Designer 11</generator>
@@ -35,6 +37,11 @@
                <field description="" name="tmp_google_maps_url" type="url">
                   <options>
                      <option name="urlDisplayReadonlyAs">Link</option>
+                     <option name="required">false</option>
+                  </options>
+               </field>
+               <field description="" name="tmp_address" type="string">
+                  <options>
                      <option name="required">false</option>
                   </options>
                </field>
@@ -50,15 +57,41 @@
                   <title>Start</title>
                   <body contentType="text/html"/>
                   <actions>
-                     <action alt="null" id="jd300kk3_k993yzdb" targetScreen="k993yzdb">
+                     <action alt="null" id="jd300kk3_kn4l2trc" targetScreen="kn4l2trc">
                         <text>Continue</text>
                      </action>
                   </actions>
                   <screenData skipIfRequiredFilled="true"/>
                </startScreen>
+               <screen id="kn4l2trc">
+                  <title>Address Location Search</title>
+                  <body contentType="text/html">&lt;h2&gt;Enter Address&lt;img style="width: 185px; height: 153px; float: right;" title="scfu-4.jpg" src="project:/com.activevos.cumulus.cloud.extend.playbook.resources/scfu/scfu-4.jpg" alt="scfu-4.jpg"&gt;&lt;/h2&gt;
+&lt;p&gt;Address:&lt;/p&gt;
+&lt;p&gt;&lt;input class="" title="tmp_address (temporary)" name="temp.tmp_address" type="text" value="tmp_address (temporary)"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;This Demo is using Google &lt;a href="https://developers.google.com/maps/documentation/geocoding/overview"&gt;Geocode API&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&amp;nbsp;&lt;/p&gt;</body>
+                  <actionPrompt/>
+                  <actions>
+                     <action alt="null" id="kn4l2trc_kn4l2tqw" targetScreen="kn4l2tqw">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+                  <screenData skipIfRequiredFilled="false">
+                     <screenDataItem name="temp.tmp_address"
+                                     readonly="false"
+                                     required="false"
+                                     type="string">
+                        <options>
+                           <option name="text_size">100</option>
+                           <option name="required">false</option>
+                           <option name="defaultvalue">100 High St Boston, MA 02110</option>
+                        </options>
+                     </screenDataItem>
+                  </screenData>
+               </screen>
                <screen id="k993yzdk">
-                  <title>Google Maps Data for Address</title>
-                  <body contentType="text/html">&lt;p&gt;Address Data&lt;/p&gt;
+                  <title>Google Data for Address</title>
+                  <body contentType="text/html">&lt;p&gt;&lt;strong&gt;Address Data&lt;/strong&gt;&lt;/p&gt;
 &lt;table cellpadding="5"&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
@@ -87,11 +120,16 @@
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&amp;nbsp; &lt;input class="" style="-moz-appearance: none; background-color: lightgrey; border: none;" title="tmp_google_maps_url (temporary)" name="temp.tmp_google_maps_url" readonly="readonly" type="text" value="tmp_google_maps_url (temporary)"&gt;&amp;nbsp;&lt;/p&gt;</body>
+&lt;p&gt;&lt;input class="" style="-moz-appearance: none; background-color: lightgrey; border: none;" title="tmp_google_maps_url (temporary)" name="temp.tmp_google_maps_url" readonly="readonly" type="text" value="tmp_google_maps_url (temporary)"&gt;&amp;nbsp;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Address Components&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;input class="" style="-moz-appearance: none; background-color: lightgrey; border: none;" title="geocodeResponse&gt;results&gt;address_components" name="output.geocodeResponse[1]/results[1]/address_components" readonly="readonly" type="text" value="geocodeResponse&gt;results&gt;address_components"&gt;&amp;nbsp;&lt;/p&gt;</body>
                   <actionPrompt/>
                   <actions>
-                     <action alt="null" id="k993yzdk_jd4cwa59" targetScreen="jd4cwa59">
-                        <text>Continue</text>
+                     <action alt="null" id="k993yzdk_lmqcuiis" targetScreen="lmqcuiis">
+                        <text>Enter Another Address</text>
+                     </action>
+                     <action alt="" id="k993yzdk_lmqcuijl" targetScreen="lmqcuijl">
+                        <text>Exit</text>
                      </action>
                   </actions>
                   <screenData skipIfRequiredFilled="false">
@@ -145,41 +183,23 @@
                            <option name="urlDisplayReadOnlyLabel">View Map</option>
                         </options>
                      </screenDataItem>
+                     <screenDataItem name="output.geocodeResponse[1]/results[1]/address_components"
+                                     readonly="true"
+                                     renderingType="table"
+                                     required="false"
+                                     type="objectlist">
+                        <options>
+                           <option name="referenceTo">GoogleGeocodeAPI:address_components</option>
+                           <option name="relationshipName">Child</option>
+                           <option name="display-options">{"display-options":{"columns":{"column":[{"name":"types","type":"string","label":"types","renderingType":"string"},{"name":"long_name","type":"int","label":"Long Name","renderingType":"int"},{"name":"short_name","type":"int","label":"Short Name","renderingType":"int"}]},"rendering-type":{"table-style":null,"height":null},"allow_pagination":true,"allow_filtering":true,"allow_sorting":true}}</option>
+                           <option hide="true" name="multiSelect">true</option>
+                           <option name="required">false</option>
+                           <option name="isCopy">true</option>
+                        </options>
+                     </screenDataItem>
                   </screenData>
                </screen>
-               <service id="k993yzdb">
-                  <title>geocodeAddress</title>
-                  <serviceName>GoogleGeocodeAPI:geocodeAddress</serviceName>
-                  <serviceGUID>kW6QmDseEwujNYt36konGu</serviceGUID>
-                  <serviceInput>
-                     <parameter id="k993skoc" name="address" source="screen" updatable="false">screen.address</parameter>
-                  </serviceInput>
-                  <screen id="k993yzdb-servicescreen">
-                     <title>geocodeAddress</title>
-                     <body contentType="text/html">&lt;p&gt;Please Enter Address&lt;/p&gt;
-&lt;p&gt;&lt;span id="ae-sf-viewer-screen-body-address-field-label"&gt;address&lt;/span&gt; &lt;input class="" title="Edit a field to change the field properties." name="screen.address" type="text" value="address*"&gt;&lt;br&gt;&lt;br&gt;&lt;/p&gt;</body>
-                     <actionPrompt/>
-                     <actions/>
-                     <screenData skipIfRequiredFilled="false">
-                        <screenDataItem name="screen.address"
-                                        readonly="false"
-                                        required="true"
-                                        type="string">
-                           <options>
-                              <option name="text_size">100</option>
-                              <option name="required">true</option>
-                              <option name="defaultvalue">100 High St., Boston</option>
-                           </options>
-                        </screenDataItem>
-                     </screenData>
-                  </screen>
-                  <actions>
-                     <action alt="null" id="k993yzdb_k993yzds" targetScreen="k993yzds">
-                        <text>Continue</text>
-                     </action>
-                  </actions>
-               </service>
-               <endScreen id="jd4cwa59">
+               <endScreen dontShowScreen="true" id="lmqcuijl">
                   <title>End</title>
                   <body contentType="text/html"/>
                   <redirectTo type="current_object"/>
@@ -187,6 +207,50 @@
                      <text/>
                   </screenActionLabel>
                </endScreen>
+               <empty gatewayType="exclusive" id="lmqcuiig">
+                  <actions/>
+               </empty>
+               <jumpTo id="lmqcuiis" targetTitle="Address Location Search">
+                  <actions>
+                     <action alt="null" id="lmqcuiis_kn4l2trc" targetScreen="kn4l2trc">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+               </jumpTo>
+               <callProcess id="kn4l2tqw">
+                  <title>GoogleDemo</title>
+                  <subflowGUID>9smYMVbZfgmiwRVUTJwT8L</subflowGUID>
+                  <subflowPath>GoogleDemo</subflowPath>
+                  <runAsUser>$current</runAsUser>
+                  <serviceInput>
+                     <parameter id="kn4lbmbs" name="in_address" source="field" updatable="true">temp.tmp_address</parameter>
+                  </serviceInput>
+                  <subflowOutput>
+                     <field name="geocodeResponse" type="reference">
+                        <options>
+                           <option name="referenceTo">GoogleGeocodeAPI:geocodeResponse</option>
+                           <option name="required">false</option>
+                           <option name="isCopy">true</option>
+                           <option name="guid">kW6QmDseEwujNYt36konGu</option>
+                        </options>
+                     </field>
+                     <field name="lng" type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </field>
+                     <field name="lat" type="string">
+                        <options>
+                           <option name="required">false</option>
+                        </options>
+                     </field>
+                  </subflowOutput>
+                  <actions>
+                     <action alt="null" id="kn4l2tqw_k993yzds" targetScreen="k993yzds">
+                        <text>Continue</text>
+                     </action>
+                  </actions>
+               </callProcess>
                <assignment id="k993yzds">
                   <title>Set URL</title>
                   <operation source="formula" to="temp.tmp_google_maps_url">
@@ -213,5 +277,5 @@ concat('https://www.google.com/maps/search/?',string-join($params, "&amp;amp;"))
       <types1:GUID>9vPUv4GFtidhPiOZElmAsK</types1:GUID>
       <types1:DisplayName>Google Address Lookup</types1:DisplayName>
    </types1:Item>
-   <types1:CurrentServerDateTime>2023-09-18T17:20:55.561Z</types1:CurrentServerDateTime>
+   <types1:CurrentServerDateTime>2023-09-19T14:12:24.226Z</types1:CurrentServerDateTime>
 </aetgt:getResponse>

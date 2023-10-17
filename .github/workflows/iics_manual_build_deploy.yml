@@ -18,14 +18,14 @@ on:
     # Inputs the workflow accepts. use ${{ github.event.inputs.input_name }}
     inputs:
       package_config:
-        # Override Custom Configuration
+        # Override Custom Package Configuration
         description: 'Package Configuration'
         # Default value if no value is explicitly provided
         default: './conf/all_exclude_connections.package.txt'
         # Input has to be provided for the workflow to run
         required: true
       publish_config:
-        # Override Custom Configuration
+        # Override Custom Publish Configuration
         description: 'Publish Configuration'
         # Default value if no value is explicitly provided
         default: './conf/all_designs.publish.txt'
@@ -75,22 +75,28 @@ jobs:
         -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
-    - name: Package Test # Package TEST Package
-      run: |
-        ant package.src \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=test \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
-    - name: Package Prod # Package PROD Package
-      run: |
-        ant package.src \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=prod \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
+    # Typically you want to build single binary and deploy to all environments,
+    # that is only feasible when all envirobenebnts are configured consitenty with respect to
+    # agent group layout. When Agent groups are named differently you need to apply transformation to 
+    # am environment specific configuration such as in following example
+    # - name: Package Test # Package TEST Package
+    #   run: |
+    #     ant package.src \
+    #     -Diics.release=./conf/iics.release.properties \
+    #     -Diics.target.environment=test \
+    #     -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+    #     -Diics.package.transform.config=../../../conf/test.transform.properties \
+    #     -Dtools.reporting.disabled=true \
+    #     -Dtools.transform.disabled=false
+    # - name: Package Prod # Package PROD Package
+    #   run: |
+    #     ant package.src \
+    #     -Diics.release=./conf/iics.release.properties \
+    #     -Diics.target.environment=prod \
+    #     -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+    #     -Diics.package.transform.config=../../../conf/prod.transform.properties \
+    #     -Dtools.reporting.disabled=true \
+    #     -Dtools.transform.disabled=false
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:

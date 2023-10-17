@@ -1,4 +1,4 @@
-# IICS MDM Deployment Pipeline
+# IICS Build Deployment Pipeline
 name: Build Deploy
 trigger:
   branches:
@@ -15,33 +15,42 @@ trigger:
 
 
 parameters:
-  - name: deployConnectors
-    displayName: Deploy Connectors
+  # Defines Package Configuration for the release, 
+  # you can override it using differnt ocnfig file or update the corresponding config file via commit
+  - name: package_config
+    displayName: Package Configuration
+    type: string
+    default: './conf/all_exclude_connections.package.txt'
+  # Defines Package Configuration
+  - name: publish_config
+    displayName: Publish Configuration
+    type: string
+    default: './conf/all_designs.publish.txt'
+  - name: deploy_dev
+    displayName: 'Deploy to Dev'
     type: boolean
     default: false
-  - name: deployDQComponents
-    displayName: Deploy DQ Components
+  - name: deploy_test
+    displayName: 'Deploy to Test'
     type: boolean
     default: true
-  - name: deployCDICAIComponents
-    displayName: Deploy CAI and CDI Components
-    type: boolean
-    default: true
-  - name: publishAllComponents
-    displayName: Publish All Components
+  - name: deploy_prod
+    displayName: 'Deploy to Prod'
     type: boolean
     default: true
 
 variables:
-  - group: "IICS-MDM-RELEASE"
-  - name: deployConnectors
-    value: ${{ parameters.deployConnectors }} 
-  - name: deployDQComponents
-    value: ${{ parameters.deployDQComponents }} 
-  - name: deployCDICAIComponents
-    value: ${{ parameters.deployCDICAIComponents }} 
-  - name: publishAllComponents
-    value: ${{ parameters.publishAllComponents }} 
+  - group: "IICS-CICD-RELEASE"
+  - name: package_config
+    value: ${{ parameters.package_config }} 
+  - name: publish_config
+    value: ${{ parameters.publish_config }} 
+  - name: deploy_dev
+    value: ${{ parameters.deploy_dev }} 
+  - name: deploy_test
+    value: ${{ parameters.deploy_test }} 
+  - name: deploy_prod
+    value: ${{ parameters.deploy_prod }} 
 
 pool:
   name: 'default'
@@ -59,7 +68,8 @@ stages:
             echo Build.SourceBranch:        $(Build.SourceBranch)
             echo Build.RequestedFor:        $(Build.RequestedFor)
             echo Build.RequestedForEmail:   $(Build.RequestedForEmail)
-            echo IICS_USER_UAT:             $(IICS_USER_UAT)
+            echo IICS_USER_DEV:             $(IICS_USER_DEV)
+            echo IICS_USER_TEST:            $(IICS_USER_TEST)
             echo IICS_USER_PROD:            $(IICS_USER_PROD)
             echo ===========================================
             echo ENV Variables
@@ -67,65 +77,17 @@ stages:
             set
           displayName: 'Print Environment Info'
         - task: Ant@1
-          displayName: 'Package CAI and CDI Assets'
+          displayName: 'Package Assets'
           inputs:
             options: >- 
-              -Diics.user.uat=$(IICS_USER_UAT) 
-              -Diics.password.uat=$(IICS_PWD_UAT) 
               -Diics.release=./conf/iics.release.properties 
               -Diics.target.environment=uat 
-              -Diics.target.package.config=./conf/mdm_cai_cdi_no_con.package.txt 
+              -Diics.target.package.config=$(variables.package_config)
               -Dtools.reporting.disabled=true 
               -Dtools.transform.disabled=true 
             targets: 'package.src'
             buildFile: 'build.xml'
             publishJUnitResults: false
-
-        - task: Ant@1
-          displayName: 'Package DQ Assets'
-          inputs:
-            options: >- 
-              -Diics.user.uat=$(IICS_USER_UAT) 
-              -Diics.password.uat=$(IICS_PWD_UAT) 
-              -Diics.release=./conf/iics.release.properties 
-              -Diics.target.environment=uat 
-              -Diics.target.package.config=./conf/mdm_dq.package.txt 
-              -Dtools.reporting.disabled=true 
-              -Dtools.transform.disabled=true 
-            targets: 'package.src'
-            buildFile: 'build.xml'
-            publishJUnitResults: false
-
-        - task: Ant@1
-          displayName: 'Package MDM Assets'
-          inputs:
-            options: >- 
-              -Diics.user.uat=$(IICS_USER_UAT) 
-              -Diics.password.uat=$(IICS_PWD_UAT) 
-              -Diics.release=./conf/iics.release.properties 
-              -Diics.target.environment=uat 
-              -Diics.target.package.config=./conf/mdm_components.package.txt 
-              -Dtools.reporting.disabled=true 
-              -Dtools.transform.disabled=true 
-            targets: 'package.src'
-            buildFile: 'build.xml'
-            publishJUnitResults: false
-        
-        - task: Ant@1
-          displayName: 'Package CAI Connectors'
-          inputs:
-            options: >- 
-              -Diics.user.uat=$(IICS_USER_UAT) 
-              -Diics.password.uat=$(IICS_PWD_UAT) 
-              -Diics.release=./conf/iics.release.properties 
-              -Diics.target.environment=uat 
-              -Diics.target.package.config=./conf/mdm_connectors.package.txt 
-              -Dtools.reporting.disabled=true 
-              -Dtools.transform.disabled=true 
-            targets: 'package.src'
-            buildFile: 'build.xml'
-            publishJUnitResults: false
-
 
         - task: CopyFiles@2
           displayName: 'Copy Build Artifacts to Staging'
@@ -142,15 +104,14 @@ stages:
             artifactType: 'Container'
             artifactName: 'IICSPackages'
 
-  - stage: Deploy_UAT
+  - stage: Deploy_Test
     dependsOn:
       - Build
-    condition: succeeded('Build')
+    condition: and(succeeded('Build'),eq(variables.deploy_dev, true))
     jobs:
     - deployment:
-      displayName: 'Deploy UAT'
-      # environment: MDM-PROD # define deployment environment
-      environment: POC-DEV # Used temporarily for testing the pipeline
+      displayName: 'Deploy Test'
+      environment: TEST 
       strategy:
         runOnce:
           deploy:
@@ -161,7 +122,7 @@ stages:
                   echo Build.SourceBranch:        $(Build.SourceBranch)
                   echo Build.RequestedFor:        $(Build.RequestedFor)
                   echo Build.RequestedForEmail:   $(Build.RequestedForEmail)
-                  echo IICS_USER:                 $(IICS_USER_UAT)
+                  echo IICS_USER:                 $(IICS_USER_TEST)
                   echo ===========================================
                   echo ENV Variables
                   echo ===========================================
@@ -171,10 +132,10 @@ stages:
                 displayName: 'Export UAT Org Assets as a Backup'
                 inputs:
                   options: >-
-                    -Diics.user.uat=$(IICS_USER_UAT) 
-                    -Diics.password.uat=$(IICS_PWD_UAT) 
+                    -Diics.user.test=$(IICS_USER_TEST) 
+                    -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
-                    -Diics.source.environment=uat 
+                    -Diics.source.environment=test 
                     -Diics.export.list.location=./conf/export_list.txt 
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
@@ -210,76 +171,44 @@ stages:
                   tree /A /F target/iics
                 displayName: 'UAT Backup Completed'
 
-              # - task: Ant@1
-              #   displayName: 'Import CAI Connectors'
-              #   condition: eq(variables.deployConnectors, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_UAT) 
-              #       -Diics.password.uat=$(IICS_PWD_UAT) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=uat 
-              #       -Diics.target.package.config=./conf/mdm_connectors.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Import DQ Assets'
-              #   condition: eq(variables.deployDQComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_UAT) 
-              #       -Diics.password.uat=$(IICS_PWD_UAT) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=uat 
-              #       -Diics.target.package.config=./conf/mdm_dq.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Import CDI and CAI Assets'
-              #   condition: eq(variables.deployCDICAIComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_UAT) 
-              #       -Diics.password.uat=$(IICS_PWD_UAT) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=uat 
-              #       -Diics.target.package.config=./conf/mdm_cai_cdi_no_con.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Publish Assets'
-              #   condition: eq(variables.publishAllComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_UAT) 
-              #       -Diics.password.uat=$(IICS_PWD_UAT) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=uat 
-              #       -Diics.target.publish.config=./conf/all_designs.publish.txt
-              #     targets: 'publish'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
+              - task: Ant@1
+                displayName: 'Import Assets'
+                condition: eq(variables.deployConnectors, true)
+                inputs:
+                  options: >- 
+                    -Diics.user.test=$(IICS_USER_TEST) 
+                    -Diics.password.test=$(IICS_PWD_TEST) 
+                    -Diics.release=./conf/iics.release.properties 
+                    -Diics.target.environment=uat 
+                    -Diics.target.package.config=$(variables.package_config)
+                    -Dtools.reporting.disabled=true 
+                    -Dtools.transform.disabled=true 
+                  targets: 'import'
+                  buildFile: 'build.xml'
+                  publishJUnitResults: false
+              - task: Ant@1
+                displayName: 'Publish Assets'
+                condition: eq(variables.publishAllComponents, true)
+                inputs:
+                  options: >- 
+                    -Diics.user.test=$(IICS_USER_TEST) 
+                    -Diics.password.test=$(IICS_PWD_TEST) 
+                    -Diics.release=./conf/iics.release.properties 
+                    -Diics.target.environment=uat 
+                    -Diics.target.publish.config=./conf/all_designs.publish.txt
+                  targets: 'publish'
+                  buildFile: 'build.xml'
+                  publishJUnitResults: false
 
   - stage: Deploy_PROD
     dependsOn:
       - Build
-      - Deploy_UAT
-    condition: and(succeeded('Build'),succeeded('Deploy_UAT'))
+      - Deploy_TEST
+    condition: and(succeeded('Build'),succeeded('Deploy_TEST'))
     jobs:
     - deployment:
       displayName: 'Deploy PROD'
-      # environment: MDM-PROD # define deployment environment
-      environment: POC-DEV # Used temporarily for testing the pipeline
+      environment: PROD
       strategy:
         runOnce:
           deploy:
@@ -328,7 +257,7 @@ stages:
               - task: CopyFiles@2
                 displayName: 'Copy Build Artifacts to target'
                 inputs: # need to copy Files to prod $(Build.SourcesDirectory)/target/iics/import/prod
-                  sourceFolder: '$(Pipeline.Workspace)/IICSPackages/import/uat'
+                  sourceFolder: '$(Pipeline.Workspace)/IICSPackages/import/test'
                   contents: '**/?(*.zip)'
                   targetFolder: '$(Build.SourcesDirectory)/target/iics/import/prod'
                   OverWrite: true
@@ -339,62 +268,32 @@ stages:
                   tree /A /F target/iics
                 displayName: 'PROD Backup Completed'
               
-              # - task: Ant@1
-              #   displayName: 'Import CAI Connectors'
-              #   condition: eq(variables.deployConnectors, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_PROD) 
-              #       -Diics.password.uat=$(IICS_PWD_PROD) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=prod 
-              #       -Diics.target.package.config=./conf/mdm_connectors.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Import DQ Assets'
-              #   condition: eq(variables.deployDQComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_PROD) 
-              #       -Diics.password.uat=$(IICS_PWD_PROD) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=prod 
-              #       -Diics.target.package.config=./conf/mdm_dq.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Import CDI and CAI Assets'
-              #   condition: eq(variables.deployCDICAIComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_PROD) 
-              #       -Diics.password.uat=$(IICS_PWD_PROD) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=prod 
-              #       -Diics.target.package.config=./conf/mdm_cai_cdi_no_con.package.txt 
-              #       -Dtools.reporting.disabled=true 
-              #       -Dtools.transform.disabled=true 
-              #     targets: 'import'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
-              # - task: Ant@1
-              #   displayName: 'Publish Assets'
-              #   condition: eq(variables.publishAllComponents, true)
-              #   inputs:
-              #     options: >- 
-              #       -Diics.user.uat=$(IICS_USER_PROD) 
-              #       -Diics.password.uat=$(IICS_PWD_PROD) 
-              #       -Diics.release=./conf/iics.release.properties 
-              #       -Diics.target.environment=prod 
-              #       -Diics.target.publish.config=./conf/all_designs.publish.txt
-              #     targets: 'publish'
-              #     buildFile: 'build.xml'
-              #     publishJUnitResults: false
+              - task: Ant@1
+                displayName: 'Import Assets'
+                condition: eq(variables.deployConnectors, true)
+                inputs:
+                  options: >- 
+                    -Diics.user.prod=$(IICS_USER_PROD) 
+                    -Diics.password.prod=$(IICS_PWD_PROD) 
+                    -Diics.release=./conf/iics.release.properties 
+                    -Diics.target.environment=prod 
+                    -Diics.target.package.config=./conf/mdm_connectors.package.txt 
+                    -Dtools.reporting.disabled=true 
+                    -Dtools.transform.disabled=true 
+                  targets: 'import'
+                  buildFile: 'build.xml'
+                  publishJUnitResults: false
+              
+              - task: Ant@1
+                displayName: 'Publish Assets'
+                condition: eq(variables.publishAllComponents, true)
+                inputs:
+                  options: >- 
+                    -Diics.user.prod=$(IICS_USER_PROD) 
+                    -Diics.password.prod=$(IICS_PWD_PROD) 
+                    -Diics.release=./conf/iics.release.properties 
+                    -Diics.target.environment=prod 
+                    -Diics.target.publish.config=./conf/all_designs.publish.txt
+                  targets: 'publish'
+                  buildFile: 'build.xml'
+                  publishJUnitResults: false

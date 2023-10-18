@@ -21,11 +21,9 @@ schedules:
     - features/snapshots_dev
 
 pool:
-  name: 'default'
+  vmImage: 'windows-latest'
   demands: 
   - java
-  - Agent.Name -equals bld30-ADOA1
-#  vmImage: ubuntu-latest
 
 steps:
 - checkout: self

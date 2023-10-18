@@ -18,11 +18,9 @@ parameters:
 
 
 pool:
-  name: 'default'
+  vmImage: 'windows-latest'
   demands: 
   - java
-  - Agent.Name -equals bld30-ADOA1
-#  vmImage: windows-latest
 
 jobs: 
 

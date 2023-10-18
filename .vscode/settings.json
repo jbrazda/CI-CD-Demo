@@ -3,8 +3,5 @@
         "Diics",
         "Dtools",
         "Unico"
-    ],
-    "yaml.schemas": {
-        "https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/master/service-schema.json": "file:///home/jbrazda/git/ado/hcg/CI-CD-Demo/.ado/azure-pipelines-mdm-build-deployment.yml"
-    }
+    ]
 }

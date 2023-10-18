@@ -1,18 +1,7 @@
 # IICS Build Deployment Pipeline
 name: Build Deploy
 trigger:
-  branches:
-    include:
-      - main
-      - releases/*
-  paths:
-    include:
-    - src
-    exclude:
-    - '**/*.yaml'
-    - '**/*.yml'
-    - '**/*.md'
-
+  -none
 
 parameters:
   # Defines Package Configuration for the release, 
@@ -21,7 +10,7 @@ parameters:
     displayName: Package Configuration
     type: string
     default: './conf/all_exclude_connections.package.txt'
-  # Defines Package Configuration
+  # Override for Publish Configuration
   - name: publish_config
     displayName: Publish Configuration
     type: string
@@ -53,7 +42,7 @@ variables:
     value: ${{ parameters.deploy_prod }} 
 
 pool:
-  name: 'default'
+  vmImage: 'ubuntu-latest'
   demands: 
   - java
 
@@ -83,6 +72,7 @@ stages:
               -Diics.release=./conf/iics.release.properties 
               -Diics.target.environment=uat 
               -Diics.target.package.config=$(variables.package_config)
+              -Diics.package.transform.config=
               -Dtools.reporting.disabled=true 
               -Dtools.transform.disabled=true 
             targets: 'package.src'
@@ -166,9 +156,9 @@ stages:
                   OverWrite: true
 
               - script: |
-                  echo UAT BACKUP COMPLETED
-                  tree /A /F $(Pipeline.Workspace)/IICSPackages
-                  tree /A /F target/iics
+                  echo "UAT BACKUP COMPLETED"
+                  ls -la $(Pipeline.Workspace)/IICSPackages/import/test
+                  ls -la target/iics/import/test
                 displayName: 'UAT Backup Completed'
 
               - task: Ant@1
@@ -186,6 +176,7 @@ stages:
                   targets: 'import'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
+              
               - task: Ant@1
                 displayName: 'Publish Assets'
                 condition: eq(variables.publishAllComponents, true)
@@ -204,7 +195,7 @@ stages:
     dependsOn:
       - Build
       - Deploy_TEST
-    condition: and(succeeded('Build'),succeeded('Deploy_TEST'))
+    condition: and(succeeded('Build'),succeeded('Deploy_TEST'),eq(variables.deploy_prod, true))
     jobs:
     - deployment:
       displayName: 'Deploy PROD'

@@ -1,7 +1,7 @@
 # IICS Build Deployment Pipeline
 name: Build Deploy
 trigger:
-  -none
+  none
 
 parameters:
   # Defines Package Configuration for the release, 

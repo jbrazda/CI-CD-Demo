@@ -1,17 +1,17 @@
 # Scheduled IICS Project Snapshot Pipeline (DEV)
 # Scheduled to backup snapshots periodically
+# @author: jbrazda@hcg.com
 name: Automated IICS Snapshot (DEV)
 
 trigger:
 - none
 
 variables:
-- group: IICS-MDM-DEV
-- name: IICS_PWD
-  value: $[variables.IICS_ORG_PWD]
+- group: "IICS-CICD-DEV"
 - name: IICS_USER
   value: $[variables.IICS_ORG_USER]
-
+- name: IICS_PWD
+  value: $[variables.IICS_ORG_PWD]
 
 schedules:
 - cron: "0 0 * * *"
@@ -21,11 +21,9 @@ schedules:
     - features/snapshots_dev
 
 pool:
-  name: 'default'
+  vmImage: 'windows-latest'
   demands: 
   - java
-  - Agent.Name -equals bld30-ADOA1
-#  vmImage: ubuntu-latest
 
 steps:
 - checkout: self
@@ -59,10 +57,16 @@ steps:
     buildFile: 'build.xml'
     publishJUnitResults: false
 
-- task: PowerShell@2
-  inputs:
-    filePath: 'update_build_configs.ps1'
+  # Update Build configurations based on the current content of the project assets
+- script: ./update_publish_all_config.sh
   displayName: 'Update Build Configurations'
+
+  # On Windows use powershell script to generate the Build configs based on the current content of the project
+  # - task: PowerShell@2
+  #   inputs:
+  #     filePath: 'update_build_configs.ps1'
+  #   displayName: 'Update Build Configurations'
+  #   condition: ${{ eq( parameters.updateBuildConfigs, true) }}
 
 - script: |
     git config --global user.email "$(GIT_COMMIT_USER)"
@@ -70,7 +74,7 @@ steps:
     git diff --stat
     git add .
     git commit -m "$(GIT_COMMIT_MESSAGE)" 
-    git push --set-upstream origin HEAD:features/$(Build.SourceBranchName)
+    git push --set-upstream origin HEAD:$(Build.SourceBranch)
     echo "Git branch $(Build.SourceBranch) updated."
   displayName: 'Commit Updated Assets'
 

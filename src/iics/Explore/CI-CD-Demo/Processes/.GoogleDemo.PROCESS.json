@@ -7,7 +7,7 @@
       "metadata": {
          "additionalInfo": {
             "contentType": "application/json; charset=utf-8",
-            "description": "This is a Google Geocode API demo Process\nversion 2.0",
+            "description": "This is a Google Geocode API demo Process\nversion 1.0",
             "documentState": "VALID"
          },
          "contextAttributes": null,

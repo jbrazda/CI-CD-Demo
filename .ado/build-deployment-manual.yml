@@ -167,7 +167,7 @@ stages:
                     -Diics.user.test=$(IICS_USER_DEV) 
                     -Diics.password.test=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=uat 
+                    -Diics.target.environment=dev 
                     -Diics.target.package.config=$(package_config)
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
@@ -183,7 +183,7 @@ stages:
                     -Diics.user.test=$(IICS_USER_DEV) 
                     -Diics.password.test=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=uat 
+                    -Diics.target.environment=dev 
                     -Diics.target.publish.config=$(publish_config))
                   targets: 'publish'
                   buildFile: 'build.xml'
@@ -262,7 +262,7 @@ stages:
                     -Diics.user.test=$(IICS_USER_TEST) 
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=uat 
+                    -Diics.target.environment=test 
                     -Diics.target.package.config=$(package_config)
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
@@ -278,7 +278,7 @@ stages:
                     -Diics.user.test=$(IICS_USER_TEST) 
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=uat 
+                    -Diics.target.environment=test 
                     -Diics.target.publish.config=$(publish_config))
                   targets: 'publish'
                   buildFile: 'build.xml'

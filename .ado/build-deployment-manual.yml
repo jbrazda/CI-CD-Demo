@@ -164,8 +164,8 @@ stages:
                 displayName: 'Import Assets'
                 inputs:
                   options: >- 
-                    -Diics.user.test=$(IICS_USER_DEV) 
-                    -Diics.password.test=$(IICS_PWD_DEV) 
+                    -Diics.user.dev=$(IICS_USER_DEV) 
+                    -Diics.password.dev=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=dev 
                     -Diics.target.package.config=$(package_config)
@@ -177,11 +177,11 @@ stages:
               
               - task: Ant@1
                 displayName: 'Publish Assets'
-                condition: eq(variables.publishAllComponents, true)
+                # condition: eq(variables.publishAllComponents, true)
                 inputs:
                   options: >- 
-                    -Diics.user.test=$(IICS_USER_DEV) 
-                    -Diics.password.test=$(IICS_PWD_DEV) 
+                    -Diics.user.dev=$(IICS_USER_DEV) 
+                    -Diics.password.dev=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=dev 
                     -Diics.target.publish.config=$(publish_config))
@@ -272,7 +272,6 @@ stages:
               
               - task: Ant@1
                 displayName: 'Publish Assets'
-                condition: eq(variables.publishAllComponents, true)
                 inputs:
                   options: >- 
                     -Diics.user.test=$(IICS_USER_TEST) 
@@ -369,7 +368,6 @@ stages:
               
               - task: Ant@1
                 displayName: 'Publish Assets'
-                condition: eq(variables.publishAllComponents, true)
                 inputs:
                   options: >- 
                     -Diics.user.prod=$(IICS_USER_PROD) 

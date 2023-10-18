@@ -71,7 +71,7 @@ stages:
             options: >- 
               -Diics.release=./conf/iics.release.properties 
               -Diics.target.environment=dev 
-              -Diics.target.package.config=$(variables.package_config)
+              -Diics.target.package.config=$(package_config)
               -Dtools.reporting.disabled=true 
               -Dtools.transform.disabled=true 
             targets: 'package.src'

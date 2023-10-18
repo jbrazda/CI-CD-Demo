@@ -1,4 +1,8 @@
 name: Deploy PROD Master
+  # this pipline sample is deprecated in fabvor of building single binary
+  # and deployment to multiple environments
+  # this is just example how to Build environment specific packages when each environemt 
+  # Agent group is different or when environment need differcnt build parameters
   # Following Project Secrets must be defined in the CI/CD Configuration
   # IICS_PROD_ORG_USER
   # IICS_PROD_ORG_PWD
@@ -10,7 +14,7 @@ on:
   push:
     branches:
       # intentionaly using different branch than master to avoid running this pipeline in our org
-      - main
+      - master_sample
     paths-ignore:
       - '.vscode/**'
       - '/doc/**'

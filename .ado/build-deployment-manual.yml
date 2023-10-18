@@ -99,8 +99,8 @@ stages:
     condition: and(succeeded('Build'),eq(variables.deploy_dev, true))
     jobs:
     - deployment:
-      displayName: 'Deploy Test'
-      environment: TEST 
+      displayName: 'Deploy Dev'
+      environment: DEV 
       strategy:
         runOnce:
           deploy:
@@ -118,7 +118,7 @@ stages:
                   set
                 displayName: 'Print Environment Info'
               - task: Ant@1
-                displayName: 'Export DEV Org Assets as a Backup'
+                displayName: 'Export Org Assets as a Backup'
                 inputs:
                   options: >-
                     -Diics.user.dev=$(IICS_USER_DEV) 
@@ -155,17 +155,17 @@ stages:
                   OverWrite: true
 
               - script: |
-                  echo "DEV BACKUP COMPLETED"
+                  echo "BACKUP COMPLETED"
                   ls -la $(Pipeline.Workspace)/IICSPackages/import/dev
                   ls -la target/iics/import/dev
-                displayName: 'UAT Backup Completed'
+                displayName: 'Backup Completed'
 
               - task: Ant@1
                 displayName: 'Import Assets'
                 inputs:
                   options: >- 
-                    -Diics.user.test=$(IICS_USER_TEST) 
-                    -Diics.password.test=$(IICS_PWD_TEST) 
+                    -Diics.user.test=$(IICS_USER_DEV) 
+                    -Diics.password.test=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
                     -Diics.target.package.config=$(package_config)
@@ -180,8 +180,8 @@ stages:
                 condition: eq(variables.publishAllComponents, true)
                 inputs:
                   options: >- 
-                    -Diics.user.test=$(IICS_USER_TEST) 
-                    -Diics.password.test=$(IICS_PWD_TEST) 
+                    -Diics.user.test=$(IICS_USER_DEV) 
+                    -Diics.password.test=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
                     -Diics.target.publish.config=$(publish_config))
@@ -213,7 +213,7 @@ stages:
                   set
                 displayName: 'Print Environment Info'
               - task: Ant@1
-                displayName: 'Export TEST Org Assets as a Backup'
+                displayName: 'Export Org Assets as a Backup'
                 inputs:
                   options: >-
                     -Diics.user.test=$(IICS_USER_TEST) 
@@ -250,10 +250,10 @@ stages:
                   OverWrite: true
 
               - script: |
-                  echo "UAT BACKUP COMPLETED"
+                  echo "BACKUP COMPLETED"
                   ls -la $(Pipeline.Workspace)/IICSPackages/import/test
                   ls -la target/iics/import/test
-                displayName: 'UAT Backup Completed'
+                displayName: 'Backup Completed'
 
               - task: Ant@1
                 displayName: 'Import Assets'

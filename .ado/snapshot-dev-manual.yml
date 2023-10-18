@@ -71,6 +71,6 @@ jobs:
       git diff --stat
       git add .
       git commit -m "${{ parameters.commitMessage }}" 
-      git push --set-upstream origin HEAD:$(Build.SourceBranchName)
+      git push --set-upstream origin $(Build.SourceBranch)
       echo "Git branch $(Build.SourceBranch) updated."
     displayName: 'Commit Updated Assets'

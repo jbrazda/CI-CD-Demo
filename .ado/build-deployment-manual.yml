@@ -87,7 +87,7 @@ stages:
             OverWrite: true
 
         - task: PublishBuildArtifacts@1
-          displayName: 'Publish Pipeline Artifacts'
+          displayName: 'Publish Build Artifacts'
           inputs:
             pathToPublish: '$(Build.ArtifactStagingDirectory)'
             artifactType: 'Container'
@@ -184,7 +184,7 @@ stages:
                     -Diics.password.dev=$(IICS_PWD_DEV) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=dev 
-                    -Diics.target.publish.config=$(publish_config))
+                    -Diics.target.publish.config=$(publish_config)
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
@@ -278,7 +278,7 @@ stages:
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=test 
-                    -Diics.target.publish.config=$(publish_config))
+                    -Diics.target.publish.config=$(publish_config)
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
@@ -374,7 +374,7 @@ stages:
                     -Diics.password.prod=$(IICS_PWD_PROD) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=prod 
-                    -Diics.target.publish.config=$(publish_config))
+                    -Diics.target.publish.config=$(publish_config)
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false

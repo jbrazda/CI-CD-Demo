@@ -1,10 +1,11 @@
 # Manual  IICS Project Snapshot Pipeline
+# @author: jbrazda@hcg.com
 trigger:
 - none
 name: Automated IICS Snapshot (DEV)
 
 variables:
-- group: "IICS-MDM-DEV"
+- group: "IICS-CICD-DEV"
 
 parameters:
   - name: commitMessage
@@ -18,16 +19,14 @@ parameters:
 
 
 pool:
-  name: 'default'
+  vmImage: 'ubuntu-latest'
   demands: 
   - java
-  - Agent.Name -equals bld30-ADOA1
-#  vmImage: windows-latest
 
 jobs: 
 
 - job: Snapshot 
-  condition: contains(variables['Build.SourceBranch'], 'dev')
+  condition: or(eq(variables['Build.SourceBranch'], 'dev'),contains(variables['Build.SourceBranch'],'features/'))
   steps:
   - checkout: self
     persistCredentials: true
@@ -43,7 +42,7 @@ jobs:
       echo '==========================================='
       set
     displayName: 'Print Environment Info'
-
+  # Export and Unzip Project assets from dev using ./conf/export_list.txt
   - task: Ant@1
     displayName: 'IICS Assets Snapshot'
     inputs:
@@ -56,11 +55,16 @@ jobs:
       targets: 'clean.target clean.src update.src'
       buildFile: 'build.xml'
       publishJUnitResults: false
-  - task: PowerShell@2
-    inputs:
-      filePath: 'update_build_configs.ps1'
+  # Update Build configurations based on the current content of the project assets
+  - script: ./update_publish_all_config.sh
     displayName: 'Update Build Configurations'
-    condition: ${{ eq( parameters.updateBuildConfigs, true) }}
+
+  # On Windows use powershell script to generate the Build configs based on the current content of the project
+  # - task: PowerShell@2
+  #   inputs:
+  #     filePath: 'update_build_configs.ps1'
+  #   displayName: 'Update Build Configurations'
+  #   condition: ${{ eq( parameters.updateBuildConfigs, true) }}
 
   - script: |
       git config --global user.email "$(Build.RequestedForEmail)"
@@ -68,6 +72,6 @@ jobs:
       git diff --stat
       git add .
       git commit -m "${{ parameters.commitMessage }}" 
-      git push --set-upstream origin HEAD:$(Build.SourceBranchName)
+      git push --set-upstream origin HEAD:$(Build.SourceBranch)
       echo "Git branch $(Build.SourceBranch) updated."
     displayName: 'Commit Updated Assets'

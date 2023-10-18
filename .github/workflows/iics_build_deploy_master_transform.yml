@@ -1,65 +1,37 @@
-# This is a basic workflow that is manually triggered
-
-name: Manual Deployment
-
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
-# Following Project Secrets must be defined in the CI/CD Configuration
-# IICS_ORG_USER_DEV: ""
-# IICS_ORG_PWD_DEV: ""
-# IICS_ORG_USER_TEST: ""
-# IICS_ORG_PWD_TEST: ""
-# IICS_ORG_USER_PROD: ""
-# IICS_ORG_PWD_PROD: ""
-
+name: Deploy PROD Master
+  # this pipline sample is deprecated in fabvor of building single binary
+  # and deployment to multiple environments
+  # this is just example how to Build environment specific packages when each environemt 
+  # Agent group is different or when environment need differcnt build parameters
+  # Following Project Secrets must be defined in the CI/CD Configuration
+  # IICS_PROD_ORG_USER
+  # IICS_PROD_ORG_PWD
 
 on:
-  workflow_dispatch:
-    # Inputs the workflow accepts. use ${{ github.event.inputs.input_name }}
-    inputs:
-      package_config:
-        # Override Custom Configuration
-        description: 'Package Configuration'
-        # Default value if no value is explicitly provided
-        default: './conf/all_exclude_connections.package.txt'
-        # Input has to be provided for the workflow to run
-        required: true
-      publish_config:
-        # Override Custom Configuration
-        description: 'Publish Configuration'
-        # Default value if no value is explicitly provided
-        default: './conf/all_designs.publish.txt'
-        # Input has to be provided for the workflow to run
-        required: true
-      deploy_to_dev:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Dev'
-        # Default value if no value is explicitly provided
-        default: false
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
-      deploy_to_test:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Test'
-        # Default value if no value is explicitly provided
-        default: true
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
-      deploy_to_prod:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Prod'
-        # Default value if no value is explicitly provided
-        default: true
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
-      
+  # Trigger the workflow on push request,
+  # but only for the defined branch
+  # ignore changes to listed paths
+  push:
+    branches:
+      # intentionaly using different branch than master to avoid running this pipeline in our org
+      - master_sample
+    paths-ignore:
+      - '.vscode/**'
+      - '/doc/**'
+      - '/sample-data/**'
+      - '**.md'
+      - '.ant_targets'
+      - '.project'
+      - 'update_publish_all_config.sh'
 jobs:
   build_all:
     runs-on: ubuntu-latest
     name: Build Deployment Packages
+    env:
+      IICS_PACKAGE_CONFIG: './conf/all_exclude_connections.package.txt'
+      IICS_TRANSFORM_CONFIG_DEV: '../../../conf/dev.transform.properties'
+      IICS_TRANSFORM_CONFIG_TEST: '../../../conf/test.transform.properties'
+      IICS_TRANSFORM_CONFIG_PROD: '../../../conf/prod.transform.properties'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -72,7 +44,8 @@ jobs:
         ant package.src \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=dev \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_DEV }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Package Test # Package TEST Package
@@ -80,7 +53,8 @@ jobs:
         ant package.src \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=test \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_TEST }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Package Prod # Package PROD Package
@@ -88,7 +62,8 @@ jobs:
         ant package.src \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=prod \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
+        -Diics.target.package.config=${{ env.IICS_PACKAGE_CONFIG }} \
+        -Diics.package.transform.config=${{ env.IICS_TRANSFORM_CONFIG_PROD }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
     - name: Archive Artifacts
@@ -105,7 +80,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
       IICS_TARGET_ENVIRONMENT: dev
-    if: ${{ github.event.inputs.deploy_to_dev == 'true' }}
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -139,7 +114,6 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
@@ -150,7 +124,7 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
   deploy_test:
@@ -160,7 +134,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_TEST }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_TEST }}
       IICS_TARGET_ENVIRONMENT: test
-    if: ${{ github.event.inputs.deploy_to_test == 'true' }}
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -194,7 +168,6 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
@@ -205,7 +178,7 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
 
@@ -216,7 +189,7 @@ jobs:
       IICS_USER_NAME: ${{ vars.IICS_ORG_USER_PROD }}
       IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_PROD }}
       IICS_TARGET_ENVIRONMENT: prod
-    if: ${{ github.event.inputs.deploy_to_prod == 'true' }} 
+      IICS_PUBLISH_CONFIG: './conf/all_designs.publish.txt'
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 1.8
@@ -250,7 +223,6 @@ jobs:
         -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
@@ -261,6 +233,6 @@ jobs:
         -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
         -Diics.release=./conf/iics.release.properties \
         -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
+        -Diics.target.publish.config=${{ env.IICS_PUBLISH_CONFIG }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true

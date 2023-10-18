@@ -191,7 +191,7 @@ stages:
   - stage: Deploy_Test
     dependsOn:
       - Build
-    condition: and(succeeded('Build'),eq(variables.deploy_dev, true))
+    condition: and(succeeded('Build'),eq(variables.deploy_test, true))
     jobs:
     - deployment:
       displayName: 'Deploy Test'

@@ -4,7 +4,7 @@ trigger:
 name: Automated IICS Snapshot (DEV)
 
 variables:
-- group: "IICS-MDM-DEV"
+- group: "IICS-CICD-DEV"
 
 parameters:
   - name: commitMessage

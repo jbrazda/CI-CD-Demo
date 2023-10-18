@@ -1,7 +1,7 @@
 # This is a basic workflow that is manually triggered
 # @author: jbrazda@hcg.com 
 
-name: Manual Deployment
+name: Buil Deploy Main
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.

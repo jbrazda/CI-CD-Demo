@@ -162,14 +162,13 @@ stages:
 
               - task: Ant@1
                 displayName: 'Import Assets'
-                condition: eq(variables.deployConnectors, true)
                 inputs:
                   options: >- 
                     -Diics.user.test=$(IICS_USER_TEST) 
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
-                    -Diics.target.package.config=$(variables.package_config)
+                    -Diics.target.package.config=$(package_config)
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
                   targets: 'import'
@@ -185,14 +184,13 @@ stages:
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
-                    -Diics.target.publish.config=./conf/all_designs.publish.txt
+                    -Diics.target.publish.config=$(publish_config))
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
   - stage: Deploy_Test
     dependsOn:
       - Build
-      - Deploy_Dev
     condition: and(succeeded('Build'),eq(variables.deploy_dev, true))
     jobs:
     - deployment:
@@ -259,14 +257,13 @@ stages:
 
               - task: Ant@1
                 displayName: 'Import Assets'
-                condition: eq(variables.deployConnectors, true)
                 inputs:
                   options: >- 
                     -Diics.user.test=$(IICS_USER_TEST) 
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
-                    -Diics.target.package.config=$(variables.package_config)
+                    -Diics.target.package.config=$(package_config)
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
                   targets: 'import'
@@ -282,7 +279,7 @@ stages:
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=uat 
-                    -Diics.target.publish.config=./conf/all_designs.publish.txt
+                    -Diics.target.publish.config=$(publish_config))
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
@@ -357,14 +354,13 @@ stages:
               
               - task: Ant@1
                 displayName: 'Import Assets'
-                condition: eq(variables.deployConnectors, true)
                 inputs:
                   options: >- 
                     -Diics.user.prod=$(IICS_USER_PROD) 
                     -Diics.password.prod=$(IICS_PWD_PROD) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=prod 
-                    -Diics.target.package.config=./conf/mdm_connectors.package.txt 
+                    -Diics.target.package.config=$(package_config)
                     -Dtools.reporting.disabled=true 
                     -Dtools.transform.disabled=true 
                   targets: 'import'
@@ -380,7 +376,7 @@ stages:
                     -Diics.password.prod=$(IICS_PWD_PROD) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=prod 
-                    -Diics.target.publish.config=./conf/all_designs.publish.txt
+                    -Diics.target.publish.config=$(publish_config))
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false

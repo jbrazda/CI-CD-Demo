@@ -1,4 +1,5 @@
 # This is a basic workflow that is manually triggered
+# @author: jbrazda@hcg.com 
 
 name: Manual Deployment
 
@@ -12,49 +13,28 @@ name: Manual Deployment
 # IICS_ORG_USER_PROD: ""
 # IICS_ORG_PWD_PROD: ""
 
-
 on:
-  workflow_dispatch:
-    # Inputs the workflow accepts. use ${{ github.event.inputs.input_name }}
-    inputs:
-      package_config:
-        # Override Custom Package Configuration
-        description: 'Package Configuration'
-        # Default value if no value is explicitly provided
-        default: './conf/all_exclude_connections.package.txt'
-        # Input has to be provided for the workflow to run
-        required: true
-      publish_config:
-        # Override Custom Publish Configuration
-        description: 'Publish Configuration'
-        # Default value if no value is explicitly provided
-        default: './conf/all_designs.publish.txt'
-        # Input has to be provided for the workflow to run
-        required: true
-      deploy_to_dev:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Dev'
-        # Default value if no value is explicitly provided
-        default: false
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
-      deploy_to_test:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Test'
-        # Default value if no value is explicitly provided
-        default: true
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
-      deploy_to_prod:
-        # Controls if to ddploy this build to Dev Environment
-        description: 'Deploy to Prod'
-        # Default value if no value is explicitly provided
-        default: true
-        type: boolean
-        # Input has to be provided for the workflow to run
-        required: false
+  # Trigger the workflow on push request,
+  # but only for the defined branch
+  # ignore changes to listed paths
+  push:
+    branches:
+      # intentionaly using different branch than master to avoid running this pipeline in our org
+      - main
+    paths-ignore:
+      - '.vscode/**'
+      - '/doc/**'
+      - '/sample-data/**'
+      - '**.md'
+      - '.ant_targets'
+      - '.project'
+      - 'update_publish_all_config.sh'
+env: 
+    package_config: './conf/all_exclude_connections.package.txt'
+    publish_config: './conf/all_designs.publish.txt'
+    deploy_to_test: true
+    deploy_to_prod: true
+
       
 jobs:
   build_all:
@@ -67,36 +47,15 @@ jobs:
       with:
         distribution: zulu
         java-version: 11
-    - name: Package Dev # Package DEV Package
+    - name: Package Assets
       run: |
         ant package.src \
         -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=dev \
+        -Diics.target.environment=test \
         -Diics.target.package.config=${{ github.event.inputs.package_config }} \
         -Dtools.reporting.disabled=true \
         -Dtools.transform.disabled=true
-    # Typically you want to build single binary and deploy to all environments,
-    # that is only feasible when all envirobenebnts are configured consitenty with respect to
-    # agent group layout. When Agent groups are named differently you need to apply transformation to 
-    # am environment specific configuration such as in following example
-    # - name: Package Test # Package TEST Package
-    #   run: |
-    #     ant package.src \
-    #     -Diics.release=./conf/iics.release.properties \
-    #     -Diics.target.environment=test \
-    #     -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-    #     -Diics.package.transform.config=../../../conf/test.transform.properties \
-    #     -Dtools.reporting.disabled=true \
-    #     -Dtools.transform.disabled=false
-    # - name: Package Prod # Package PROD Package
-    #   run: |
-    #     ant package.src \
-    #     -Diics.release=./conf/iics.release.properties \
-    #     -Diics.target.environment=prod \
-    #     -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-    #     -Diics.package.transform.config=../../../conf/prod.transform.properties \
-    #     -Dtools.reporting.disabled=true \
-    #     -Dtools.transform.disabled=false
+
     - name: Archive Artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -104,61 +63,7 @@ jobs:
         path: target/iics
         if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
 ## DEPLOY Jobs
-  deploy_dev:
-    runs-on: ubuntu-latest
-    environment: dev
-    env:
-      IICS_USER_NAME: ${{ vars.IICS_ORG_USER_DEV }}
-      IICS_USER_PWD: ${{ secrets.IICS_ORG_PWD_DEV }}
-      IICS_TARGET_ENVIRONMENT: dev
-    if: ${{ github.event.inputs.deploy_to_dev == 'true' }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v3
-      with:
-        distribution: zulu
-        java-version: 11
-    - name: Backup Assets From Target Org
-      run: |
-        ant download.src \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.export.list.location=./conf/export_list.txt \
-        -Diics.source.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Dtools.reporting.disabled=true
-    - name: Archive Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: backup_dev
-        path: target/iics
-        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
-    - name: Download Build Artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: build_packages
-        path: target/iics
-    - name: Import Assets
-      run: |
-        ant import \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.package.config=${{ github.event.inputs.package_config }} \
-        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
-    - name: Publish Assets
-      run: |
-        ant publish \
-        -Diics.user.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_NAME }}" \
-        -Diics.password.${{ env.IICS_TARGET_ENVIRONMENT }}="${{ env.IICS_USER_PWD }}" \
-        -Diics.release=./conf/iics.release.properties \
-        -Diics.target.environment=${{ env.IICS_TARGET_ENVIRONMENT }} \
-        -Diics.target.publish.config=${{ github.event.inputs.publish_config }} \
-        -Dtools.reporting.disabled=true \
-        -Dtools.transform.disabled=true
+
   deploy_test:
     runs-on: ubuntu-latest
     environment: test
@@ -194,11 +99,6 @@ jobs:
       with:
         name: build_packages
         path: target/iics
-    - name: Copy Build Artifacts 
-      run: |
-        set -e
-        mkdir target/iics/import/test
-        cp --verbose target/iics/import/dev/* target/iics/import/test
     - name: Import Assets
       run: |
         ant import \
@@ -259,7 +159,7 @@ jobs:
       run: |
         set -e
         mkdir target/iics/import/prod
-        cp --verbose target/iics/import/dev/* target/iics/import/prod
+        cp --verbose target/iics/import/test/* target/iics/import/prod
     - name: Import Assets
       run: |
         ant import \

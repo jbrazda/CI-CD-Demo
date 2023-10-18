@@ -55,7 +55,7 @@ jobs:
       buildFile: 'build.xml'
       publishJUnitResults: false
   # Update Build configurations based on the current content of the project assets
-  - script: update_publish_all_config.sh
+  - script: ./update_publish_all_config.sh
     displayName: 'Update Build Configurations'
 
   # On Windows use powershell script to generate the Build configs based on the current content of the project

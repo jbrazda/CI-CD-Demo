@@ -802,7 +802,6 @@
         </sequential>
     </macrodef>
 
-
     <macrodef name="check.credentials">
         <attribute name="userProperty" description="Define User proerty to be checked" />
         <attribute name="passwordProperty" description="Define Pasword proerty to be checked" />

@@ -194,6 +194,11 @@ jobs:
       with:
         name: build_packages
         path: target/iics
+    - name: Copy Build Artifacts 
+      run: |
+        set -e
+        mkdir target/iics/import/test
+        cp --verbose target/iics/import/dev/* target/iics/import/test
     - name: Import Assets
       run: |
         ant import \
@@ -250,6 +255,11 @@ jobs:
       with:
         name: build_packages
         path: target/iics
+    - name: Copy Build Artifacts 
+      run: |
+        set -e
+        mkdir target/iics/import/prod
+        cp --verbose target/iics/import/dev/* target/iics/import/prod
     - name: Import Assets
       run: |
         ant import \

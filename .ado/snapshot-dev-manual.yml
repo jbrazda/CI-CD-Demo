@@ -1,4 +1,5 @@
 # Manual  IICS Project Snapshot Pipeline
+# @author: jbrazda@hcg.com
 trigger:
 - none
 name: Automated IICS Snapshot (DEV)

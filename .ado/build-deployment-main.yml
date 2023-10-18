@@ -1,4 +1,5 @@
 # IICS Build Deployment Pipeline
+# @author: jbrazda@hcg.com
 name: Build Deploy
 trigger:
 
@@ -27,10 +28,6 @@ parameters:
     displayName: Publish Configuration
     type: string
     default: './conf/all_designs.publish.txt'
-  - name: deploy_dev
-    displayName: 'Deploy to Dev'
-    type: boolean
-    default: false
   - name: deploy_test
     displayName: 'Deploy to Test'
     type: boolean
@@ -105,101 +102,6 @@ stages:
             artifactType: 'Container'
             artifactName: 'IICSPackages'
 
-  - stage: Deploy_Dev
-    dependsOn:
-      - Build
-    condition: and(succeeded('Build'),eq(variables.deploy_dev, true))
-    jobs:
-    - deployment:
-      displayName: 'Deploy Dev'
-      environment: DEV 
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - checkout: self
-                persistCredentials: true
-              - script: |
-                  echo Build.SourceBranch:        $(Build.SourceBranch)
-                  echo Build.RequestedFor:        $(Build.RequestedFor)
-                  echo Build.RequestedForEmail:   $(Build.RequestedForEmail)
-                  echo IICS_USER:                 $(IICS_USER_DEV)
-                  echo ===========================================
-                  echo ENV Variables
-                  echo ===========================================
-                  set
-                displayName: 'Print Environment Info'
-              - task: Ant@1
-                displayName: 'Export Org Assets as a Backup'
-                inputs:
-                  options: >-
-                    -Diics.user.dev=$(IICS_USER_DEV) 
-                    -Diics.password.dev=$(IICS_PWD_DEV) 
-                    -Diics.release=./conf/iics.release.properties 
-                    -Diics.source.environment=dev 
-                    -Diics.export.list.location=./conf/export_list.txt 
-                    -Dtools.reporting.disabled=true 
-                    -Dtools.transform.disabled=true 
-                  targets: 'download.src'
-                  buildFile: 'build.xml'
-                  publishJUnitResults: false
-              - task: CopyFiles@2
-                displayName: 'Copy Backup to Staging'
-                inputs:
-                  sourceFolder: '$(Build.SourcesDirectory)/target/iics'
-                  contents: '**/?(*.zip)'
-                  targetFolder: '$(Build.ArtifactStagingDirectory)'
-                  OverWrite: true
-              
-              - task: PublishBuildArtifacts@1
-                displayName: 'Publish Backup'
-                inputs:
-                  pathToPublish: '$(Build.ArtifactStagingDirectory)'
-                  artifactType: 'Container'
-                  artifactName: 'Backups'
-
-              - task: CopyFiles@2
-                displayName: 'Copy Build Artifacts to target'
-                inputs:
-                  sourceFolder: '$(Pipeline.Workspace)/IICSPackages'
-                  contents: '**/?(*.zip)'
-                  targetFolder: '$(Build.SourcesDirectory)/target/iics'
-                  OverWrite: true
-
-              - script: |
-                  echo "BACKUP COMPLETED"
-                  ls -la $(Pipeline.Workspace)/IICSPackages/import/dev
-                  ls -la target/iics/import/dev
-                displayName: 'Backup Completed'
-
-              - task: Ant@1
-                displayName: 'Import Assets'
-                inputs:
-                  options: >- 
-                    -Diics.user.dev=$(IICS_USER_DEV) 
-                    -Diics.password.dev=$(IICS_PWD_DEV) 
-                    -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=dev 
-                    -Diics.target.package.config=$(package_config)
-                    -Dtools.reporting.disabled=true 
-                    -Dtools.transform.disabled=true 
-                  targets: 'import'
-                  buildFile: 'build.xml'
-                  publishJUnitResults: false
-              
-              - task: Ant@1
-                displayName: 'Publish Assets'
-                # condition: eq(variables.publishAllComponents, true)
-                inputs:
-                  options: >- 
-                    -Diics.user.dev=$(IICS_USER_DEV) 
-                    -Diics.password.dev=$(IICS_PWD_DEV) 
-                    -Diics.release=./conf/iics.release.properties 
-                    -Diics.target.environment=dev 
-                    -Diics.target.publish.config=$(publish_config))
-                  targets: 'publish'
-                  buildFile: 'build.xml'
-                  publishJUnitResults: false
   - stage: Deploy_Test
     dependsOn:
       - Build
@@ -290,7 +192,7 @@ stages:
                     -Diics.password.test=$(IICS_PWD_TEST) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=test 
-                    -Diics.target.publish.config=$(publish_config))
+                    -Diics.target.publish.config=$(publish_config)
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false
@@ -386,7 +288,7 @@ stages:
                     -Diics.password.prod=$(IICS_PWD_PROD) 
                     -Diics.release=./conf/iics.release.properties 
                     -Diics.target.environment=prod 
-                    -Diics.target.publish.config=$(publish_config))
+                    -Diics.target.publish.config=$(publish_config)
                   targets: 'publish'
                   buildFile: 'build.xml'
                   publishJUnitResults: false

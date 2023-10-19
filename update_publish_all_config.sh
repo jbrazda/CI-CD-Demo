@@ -28,5 +28,5 @@ find ./src/iics -name "*.GUIDE.xml" | "$sed_exec" -r 's/(\.\/src\/iics\/)|(\.xml
 
 echo 'conf/all_designs.publish.txt Updated'
 
-
+# Print diff of the updated config
 git diff conf/all_designs.publish.txt

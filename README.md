@@ -21,13 +21,18 @@ This project contains IICS Assets Management Demo
 
 See CI/CD COnfiguration Examples for different platforms
 
-| Git Hosting  | Pipeline Configuration                                                                           | Description                                                   |
-| ------------ | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| Bitbucket    | [bitbucket-pipelines.yml](bitbucket-pipelines.yml)                                               | Example pipeline for Bitbucket                                |
-| Github       | [.github/workflows/iics_dev_snapshot.yml](.github/workflows/iics_dev_snapshot.yml)               | Github Pipeline to tae IICS Snapshots to dev/feature branches |
-| Github       | [.github/workflows/iics_manual_build_deploy.yml](.github/workflows/iics_manual_build_deploy.yml) | Github Pipeline for Manual deployments                        |
-| GitLab       | [.gitlab-ci.yml](.gitlab-ci.yml)                                                                 | Example Gitlab Pipeline                                       |
-| Azure DevOps | [.ado](.ado)                                                                                     | Example Azure DevOps Pipelines                                |
+| Git Hosting  | Pipeline Configuration                             | Description                    |
+| ------------ | -------------------------------------------------- | ------------------------------ |
+| Bitbucket    | [bitbucket-pipelines.yml](bitbucket-pipelines.yml) | Example pipeline for Bitbucket |
+| Github       | [.github](.github)                                 | Example Github Pieplines       |
+| GitLab       | [.gitlab-ci.yml](.gitlab-ci.yml)                   | Example Gitlab Pipeline        |
+| Azure DevOps | [.ado](.ado)                                       | Example Azure DevOps Pipelines |
+
+## Project Staus Badges
+
+[![Manual Dev Snapshot](https://github.com/jbrazda/CI-CD-Demo/actions/workflows/iics_dev_snapshot.yml/badge.svg)](https://github.com/jbrazda/CI-CD-Demo/actions/workflows/iics_dev_snapshot.yml)
+[![Manual Deployment DEV](https://github.com/jbrazda/CI-CD-Demo/actions/workflows/iics_build_deploy_manual.yml/badge.svg?branch=dev)](https://github.com/jbrazda/CI-CD-Demo/actions/workflows/iics_build_deploy_manual.yml)
+
 
 ## Contacts
 
